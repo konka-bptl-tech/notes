@@ -1,0 +1,34 @@
+pipeline{
+    agent any
+    tools{
+        maven "m3"
+    }
+    stages{
+        stage("Echo Version"){
+            steps{
+                sh 'Check the Maven version'
+                sh "mvn --version"
+            }
+            stage("Build the application"){
+                steps{
+                    // generate git snippet from pipeline sysntax
+                    sh "mvn clean package -DskipTests=true"
+                }
+            }
+            stage("Unit Test Cases"){
+                steps{
+                    script{
+                       for (int i = 0 ; i<=60 ; i++){
+                        echo "${i+1}"
+                        sleep 1
+                       }
+                       sh "mvn test"
+                    }
+                }
+            }
+        }
+    }
+}
+
+// middle of the job execution stop the jenkins
+// after some time restart the jenkins see the job executions was started where it is stopped this is main difference between pipeline jobs and free style jobs
