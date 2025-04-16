@@ -3,15 +3,24 @@
 
 In Kubernetes, managing deployments for multiple environments like dev, qa, stage, and prod usually means having separate YAML files for each environment.  
 This leads to:
-🔁 Duplication of code — same deployment logic repeated with minor changes (image tags, replicas, env vars)  
-⚠️ Error-prone maintenance — changes need to be updated in multiple places  
+
+🔁 Duplication of code — same deployment logic repeated with minor changes (image tags, replicas, env vars)
+
+⚠️ Error-prone maintenance — changes need to be updated in multiple places
+
 📉 Lack of scalability — becomes hard to manage as environments and microservices grow
+
 ---
 ✅ How Helm Solves This:
+
 Helm is a package manager for Kubernetes that introduces a powerful templating system. It allows you to:
-📄 Templatize common resources like Deployment, Service, Ingress  
-📁 Maintain a single set of templates for all environments  
+
+📄 Templatize common resources like Deployment, Service, Ingress 
+
+📁 Maintain a single set of templates for all environments
+
 ⚙️ Pass environment-specific values using separate files like `values-dev.yaml`, `values-qa.yaml`, etc.
+
 For example:
 ```bash
 helm upgrade --install my-app ./charts/my-app -f values-dev.yaml
