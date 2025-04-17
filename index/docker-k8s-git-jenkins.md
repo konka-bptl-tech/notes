@@ -78,9 +78,9 @@
 # Day-10[15][10]
 - Helmify expense and instana[try yourself]
 # Day-11[16][11]
-Part-1
 - CRD's & Operators
 - HashiCorp Vault
+# Day-12[17][12] 
 Part-2
 - Ingress
 - Annotations
