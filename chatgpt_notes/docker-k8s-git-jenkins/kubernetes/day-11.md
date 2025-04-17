@@ -1,73 +1,41 @@
-# 🌐 Ingress in Kubernetes
+🌱 CRD (Custom Resource Definition)
+
+- What is it?  
+  A CRD lets you create your own custom resource types in Kubernetes — just like how Pods, Services, or Deployments are resource types.
+
+- Why use it?  
+  When the default Kubernetes resources aren't enough for your app's needs, you can define your own.
+
+- Example:  
+  You can create a custom resource called MyDatabase with fields like replicas, storageSize, etc.
+---
+🤖 Operator
+- What is it?  
+  An Operator is a controller that understands how to manage your custom resource (usually built around a CRD).
+- What does it do?  
+  It automates operational tasks like:  
+  - Deploying  
+  - Backing up  
+  - Upgrading  
+  - Scaling
+- How?  
+  It watches for changes to your custom resource and reacts accordingly — just like how the Deployment controller watches Deployments and creates Pods.
+---
+
+🎯 Real-world Analogy
+
+- CRD = A new type of form you introduce in an office, like "VacationRequestForm".
+- Operator = A smart assistant who watches for these forms, processes them, sends approval emails, and books flights.
 
 ---
 
-### 📌 What is **Ingress**?
-- **Ingress** is a **Kubernetes API object** that manages **external access** to services in a cluster.
-- It acts as a **Layer 7 (Application Layer) Load Balancer**, routing external HTTP/HTTPS traffic to internal services **based on rules** (host/path).
+🧠 Summary
 
+| Concept   | Purpose                                   |
+|-----------|-------------------------------------------|
+| CRD       | Defines a new type of Kubernetes resource |
+| Operator  | Automates how to manage that resource     |
 ---
-
-### ⚙️ Ingress vs Traditional Load Balancers
-
-#### 🔸 Layer 4 Load Balancer (Transport Layer)
-- Just forwards traffic (e.g., TCP) to backend pods.
-- **No routing intelligence** — no path or host-based decisions.
-- Doesn’t inspect or modify the request.
-- Works like a **traffic distributor**.
-
-#### 🔹 Layer 7 Load Balancer (Application Layer)
-- Smart routing based on:
-  - **Hostnames** (e.g., `mail.google.com`)
-  - **Paths** (e.g., `/api`, `/admin`)
-- Supports:
-  - URL rewrites
-  - SSL termination
-  - Authentication
-  - Header-based routing
-
----
-
-### 📥 Examples of Host-Based Routing
-| Hostname | Service |
-|----------|---------|
-| `www.google.com` | Google Search |
-| `drive.google.com` | Google Drive |
-| `mail.google.com` | Gmail |
-| `calendar.google.com` | Google Calendar |
-| `meet.google.com` | Google Meet |
-| `photos.google.com` | Google Photos |
-| `maps.google.com` | Google Maps |
-
----
-
-### 🛡️ Why not just use NodePort or LoadBalancer?
-
-| Method | Issues |
-|--------|--------|
-| **NodePort** | Exposes ports on every node – **not secure**, hard to manage. |
-| **LoadBalancer** | Creates a **dedicated L4 load balancer per service** – very **expensive** and **not scalable**. |
-
-✅ **Ingress** provides a **centralized**, **secure**, and **cost-effective** solution for routing multiple apps.
-
----
-
-### 🚦 Ingress Request Flow
-**Browser** → **DNS Resolution** → **TCP 3-Way Handshake** →  
-**Load Balancer (L7)** → **Ingress Controller** → **K8s Service** → **Pod**
-
----
-
-### 📄 Summary
-
-| Component | Description |
-|----------|-------------|
-| **Ingress Resource** | Defines routing rules (host/path) |
-| **Ingress Controller** | Enforces rules and routes traffic accordingly |
-| **Example** | `api.example.com` → routes to `backend-service` |
-
----
-
 ## 🔐 Why Use **HashiCorp Vault**?
 
 ### 1. **Centralized Secrets Management**
@@ -166,6 +134,74 @@ A Kubernetes **controller** that **syncs secrets from external secret stores** (
 - GCP Secret Manager
 
 ---
+# 🌐 Ingress in Kubernetes
+
+---
+
+### 📌 What is **Ingress**?
+- **Ingress** is a **Kubernetes API object** that manages **external access** to services in a cluster.
+- It acts as a **Layer 7 (Application Layer) Load Balancer**, routing external HTTP/HTTPS traffic to internal services **based on rules** (host/path).
+
+---
+
+### ⚙️ Ingress vs Traditional Load Balancers
+
+#### 🔸 Layer 4 Load Balancer (Transport Layer)
+- Just forwards traffic (e.g., TCP) to backend pods.
+- **No routing intelligence** — no path or host-based decisions.
+- Doesn’t inspect or modify the request.
+- Works like a **traffic distributor**.
+
+#### 🔹 Layer 7 Load Balancer (Application Layer)
+- Smart routing based on:
+  - **Hostnames** (e.g., `mail.google.com`)
+  - **Paths** (e.g., `/api`, `/admin`)
+- Supports:
+  - URL rewrites
+  - SSL termination
+  - Authentication
+  - Header-based routing
+
+---
+
+### 📥 Examples of Host-Based Routing
+| Hostname | Service |
+|----------|---------|
+| `www.google.com` | Google Search |
+| `drive.google.com` | Google Drive |
+| `mail.google.com` | Gmail |
+| `calendar.google.com` | Google Calendar |
+| `meet.google.com` | Google Meet |
+| `photos.google.com` | Google Photos |
+| `maps.google.com` | Google Maps |
+
+---
+
+### 🛡️ Why not just use NodePort or LoadBalancer?
+
+| Method | Issues |
+|--------|--------|
+| **NodePort** | Exposes ports on every node – **not secure**, hard to manage. |
+| **LoadBalancer** | Creates a **dedicated L4 load balancer per service** – very **expensive** and **not scalable**. |
+
+✅ **Ingress** provides a **centralized**, **secure**, and **cost-effective** solution for routing multiple apps.
+
+---
+
+### 🚦 Ingress Request Flow
+**Browser** → **DNS Resolution** → **TCP 3-Way Handshake** →  
+**Load Balancer (L7)** → **Ingress Controller** → **K8s Service** → **Pod**
+
+---
+
+### 📄 Summary
+
+| Component | Description |
+|----------|-------------|
+| **Ingress Resource** | Defines routing rules (host/path) |
+| **Ingress Controller** | Enforces rules and routes traffic accordingly |
+| **Example** | `api.example.com` → routes to `backend-service` |
+
 
 ## 🌐 **External DNS Controller**
 
