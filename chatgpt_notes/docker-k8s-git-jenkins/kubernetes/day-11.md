@@ -1,3 +1,4 @@
+# Part-1
 🌱 CRD (Custom Resource Definition)
 
 - What is it?  
@@ -134,7 +135,9 @@ A Kubernetes **controller** that **syncs secrets from external secret stores** (
 - GCP Secret Manager
 
 ---
-# 🌐 Ingress in Kubernetes
+
+# Part-2
+## 🌐 Ingress in Kubernetes
 
 ---
 
