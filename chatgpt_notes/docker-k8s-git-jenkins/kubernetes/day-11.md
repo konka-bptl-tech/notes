@@ -1,4 +1,4 @@
-# 🌐 Ingress in Kubernetes – Beautiful Notes
+# 🌐 Ingress in Kubernetes
 
 ---
 
