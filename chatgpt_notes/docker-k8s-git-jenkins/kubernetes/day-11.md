@@ -136,6 +136,12 @@ No password stored anywhere permanently. 🔥
 ---
 Great! Let’s break down **External Secrets Operator** and **External DNS Controller** — both are super useful in Kubernetes for automating secrets and DNS management 🔄🌐
 
+
+- Launch EC2 installation
+- Install HV
+- Disable https
+- /etc/vault.d/vault.hcl
+
 ---
 
 ## 🔐 **External Secrets Operator (ESO)**
