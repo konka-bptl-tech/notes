@@ -135,6 +135,7 @@ Here’s what happens:
    ```
 
 It means:
+
 ✅ The controller verified everything
 ✅ It applied any needed changes
 ✅ The "real world" now matches your spec
