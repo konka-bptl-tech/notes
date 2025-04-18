@@ -147,6 +147,7 @@ It means:
 
 Kubernetes controllers (Deployment, Ingress, HPA, etc.) constantly reconcile to **self-heal** and **auto-fix drift**. It's a key part of how Kubernetes stays declarative and reliable.
 
+<pre>
 You apply an Ingress 📝
    |
    v
@@ -178,3 +179,4 @@ Controller says: "Mismatch! Let me fix it..." 🔧
            |
            v
 📣  `SuccessfullyReconciled`
+</pre>
