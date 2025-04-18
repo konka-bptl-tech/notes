@@ -73,47 +73,43 @@
 - ConfigMap
 - Secrets
 - Probes
-# Day-9[14][09]
+# Day-9[14]
 - Manifest files creation for expense and instance[try yourself]
-# Day-10[15][10]
+# Day-10[15]
 - Helmify expense and instana[try yourself]
-# Day-11[16][11]
+# Day-11[16]
 - CRD's & Operators
 - HashiCorp Vault
-# Day-12[17][12] 
-Part-2
+# Day-12[17] 
 - Ingress
 - Annotations
 - ExternalSecretOperator
 - ExternalDNS
-# Day-12[17][Admin][12]
+# Day-13[18]
 - Serivce Account
 - RBAC
-# Day-13[18][Admin][13]
 - Network Policies
 - Resource Quotas
 - Limit Ranges
-# Day-14[19][Adv Scheduling][14]
+# Day-14[19]
 - NodeSelector
 - Affinity & Anti-Affinity
 - Pod Affinity & Anti-Affinity
-# Day-15[20][Adv Scheduling][15]
 - Taints & Tolerations
-# Day-16[21][16]
+# Day-15[20]
 - k8s errors simulation
-# Day-17[22][17]
+# Day-16[21]
 - EKS setup with Terraform
-
 ---
 Git&Github
 ---
-# Day-1[23][18]
+# Day-1[22]
 - What is Git,Github & Why
 - Git Basics
 - Branches creation
 - Merge,Rebase & Cherry-Pick
 - Git Stash
-# Day-2[24][19]
+# Day-2[23]
 - Reset & Revert
 - Brnaching Strategy
 - Git Tags
@@ -121,62 +117,60 @@ Git&Github
 ---
 # Jenkins
 ---
-# Day-1[25][20]
+# Day-1[24]
 - SDLC
   - waterfall
   - agile
   - DevOps[CI-CD]
   - DevSecOps[CI-CD]
 - Jenkins Introduction
-# Day-2[26][21]
+# Day-2[25]
 - Jenkins Distributed Architecture[Control-Plane+Build-Node]
 - FreeStyle Jobs
 - Pipelines Examples
   - Scripted
   - Declarative
 - Declarative Pipeline Syntax go through
-# Day-3[27][22]
+# Day-3[26]
 - Jenkins Shared Libs
 - Multi Branch pipelines
-# Day-4[28][23]
+# Day-4[27]
 - Prometheus Grafana[Metrics]
-# Day-5[29][24]
+# Day-5[28]
 - ELK[Logs]
-# Day-6[30][25]
+# Day-6[29]
 - CI pipeline
-# Day-7[31][26]
+# Day-7[30]
 - CD Pipeline
-# Day-8[32][Adminstrator]
+# Day-8[31]
 - RBAC
 - Backup & Restore and Version Upgrade
-# Day-9[33][27]
+# Day-9[32]
 - GitOps
 - ArgoCD
 ---
 # Kubernetes[Phase-2]
-# Day-1[34]
+# Day-1[33]
 - Monitoring K8s Cluster With Prometheus and Grafana
-# Day-2[35]
+# Day-2[34]
 - Daemonset
 - hostPath
 - FileBeats to collect Logs and push to LogStash
-# Day-3[36]
+# Day-3[35]
 - Karpenter
-# Day-4[37]
+# Day-4[36]
 - Pod Security
 - Pod Security Admission (PSA)
-# Day-5[38]
+# Day-5[37]
 - Istio[Tracing]
-# Day-6[39]
+# Day-6[38]
 - Velero
-# Day-7[40]
+# Day-7[39]
 - Cluster Upgradation
-# Day-8
+# Day-8[40]
 - AWS CLI[Application Modernization]
-# Day-9
+# Day-9[41]
 - Terraform[Application Modernization]
-
-
 
 
 
