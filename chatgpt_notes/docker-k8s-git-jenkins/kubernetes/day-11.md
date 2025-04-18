@@ -1,4 +1,3 @@
-# Part-1
 🌱 CRD (Custom Resource Definition)
 
 - What is it?  
