@@ -134,3 +134,77 @@ A Kubernetes **controller** that **syncs secrets from external secret stores** (
 - Azure Key Vault
 - GCP Secret Manager
 ---
+
+# Install HV controller in K8s
+#!/bin/bash
+
+echo "Add HV helm repo"
+helm repo add external-secrets https://charts.external-secrets.io
+
+echo "install hv"
+helm install external-secrets \
+   external-secrets/external-secrets \
+    -n kube-system
+
+# Execrcise
+1. Create EC2 instance and install HashiCorp Vault
+2. Disable TLS certifcate
+3. Access HV using <NodeIP>:<8200>
+4. Enter No of Key Shares are require for example 1 enter sahre root token and key shares
+5. Enter Asks key share enter key share earlier saved and then token
+6. Create Secret Engine --> Enable New Engine --> Choose KV --> change path to desired name for example backend
+7. enter path Store secrets and save it
+8. Create a Policy name any name for example  hv-policy-dev.hcl 
+   path "backend/data/dev" {
+        capabilities = ["create", "read", "update", "delete", "list"]
+   }   and then save it
+9. Create Cluster Secret store
+```yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-token
+  namespace: kube-system
+data:
+  token: [token] #base64 encoded
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterSecretStore
+metadata:
+  name: vault-backend
+spec:
+  provider:
+    vault:
+      server: "http://ws.bapatlas.site:8200/" # HV address
+      path: "backend" # root path of your secrets in HV
+      version: "v2"
+      auth:
+        tokenSecretRef:
+          name: "vault-token"
+          key: "token"
+          namespace: kube-system
+# kubectl apply -f clustersecretstore.yaml
+```
+10. Create External Secret Store
+```yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: # name of externalsecret store
+spec:
+  refreshInterval: "5s"
+  secretStoreRef:
+    name: # CluasterSecretStoreName
+    kind: ClusterSecretStore
+  target:
+    name: # After Getting Secrets it stores the with this name
+  dataFrom:
+    - extract:
+        key: # Key of Secret Store for example we store as dev
+# kubectl apply -f externalsecretstore.yaml
+```
+Here you go:
+
+### 🔗 **Official Documentation**
+[https://external-secrets.io/latest/introduction/getting-started/](https://external-secrets.io/latest/introduction/getting-started/)
