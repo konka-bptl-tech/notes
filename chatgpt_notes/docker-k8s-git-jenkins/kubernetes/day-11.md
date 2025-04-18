@@ -157,10 +157,10 @@ helm install external-secrets \
 7. enter path Store secrets and save it
 8. Create a Policy name any name for example  
 ```yaml
-  #hv-policy-dev.hcl 
-   path "backend/data/dev" {
-        capabilities = ["create", "read", "update", "delete", "list"]
-   }
+#hv-policy-dev.hcl 
+path "backend/data/dev" {
+    capabilities = ["create", "read", "update", "delete", "list"]
+}
 ```
 - and then save it
 9. Create Cluster Secret store
