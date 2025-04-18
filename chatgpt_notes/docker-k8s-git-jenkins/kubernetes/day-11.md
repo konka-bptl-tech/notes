@@ -136,17 +136,17 @@ A Kubernetes **controller** that **syncs secrets from external secret stores** (
 ---
 
 # Install HV controller in K8s
+```bash
 #!/bin/bash
 
 echo "Add HV helm repo"
-
 helm repo add external-secrets https://charts.external-secrets.io
 
 echo "install hv"
 helm install external-secrets \
    external-secrets/external-secrets \
     -n kube-system
-
+```
 # Execrcise
 1. Create EC2 instance and install HashiCorp Vault
 2. Disable TLS certifcate
