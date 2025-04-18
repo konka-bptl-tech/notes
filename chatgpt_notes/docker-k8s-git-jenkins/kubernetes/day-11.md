@@ -139,6 +139,7 @@ A Kubernetes **controller** that **syncs secrets from external secret stores** (
 #!/bin/bash
 
 echo "Add HV helm repo"
+
 helm repo add external-secrets https://charts.external-secrets.io
 
 echo "install hv"
