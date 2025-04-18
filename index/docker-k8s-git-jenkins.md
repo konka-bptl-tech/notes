@@ -1,29 +1,29 @@
 ---
 # Docker
 ---
-# Day-1
+# Day-1[1]
 - Deployment on physical,vm and containers and it's challenges
 - Containerization and Docker
 - Docker Architecture
 - Container & LifeCycle
 - Docker Basic Commands
   [logs,inspect,stats,run,rmi,rm,stop,pause,unpause,prune,system]
-# Day-2
+# Day-2[2]
 - Dockerfile instructions
 - Docker Layers
 - Docker Compose
-# Day-3
+# Day-3[3]
 - volumes
   - named & Annoymous volumes
   - BindMounts
 - Dockerize Expense Project
 - Dockerize Instana Project[Try YourSelf]
-# Day-4
+# Day-4[4]
 - Networking
   - Bridge Network[Default&Custom]
   - host
   - none
-# Day-5
+# Day-5[5]
 - Docker Compose to run expense and instana
 - namespaces & cGroups
 - Docker Best practices
