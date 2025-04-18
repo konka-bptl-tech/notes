@@ -231,3 +231,75 @@ helm install external-dns external-dns/external-dns \
     --set serviceAccount.name=external-dns \
     -n kube-system
 ```
+
+```yaml
+# Project-1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project1-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: project1
+  template:
+    metadata:
+      labels:
+        app: project1
+    spec:
+      containers:
+      - name: project1
+        image: busybox
+        command: ['sh', '-c', 'while true; do echo "<html><body style=\'background-color:red; color:white;\'><h1>Project1: $(hostname -i)</h1></body></html>" | nc -l -p 8080 -q 1; done']
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project1-service
+spec:
+  selector:
+    app: project1
+  ports:
+    - port: 80
+      targetPort: 8080
+```
+
+```yaml
+# Project-2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project2-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: project2
+  template:
+    metadata:
+      labels:
+        app: project2
+    spec:
+      containers:
+      - name: project2
+        image: busybox
+        command: ['sh', '-c', 'while true; do echo "<html><body style=\'background-color:purple; color:white;\'><h1>Project2: $(hostname -i)</h1></body></html>" | nc -l -p 8080 -q 1; done']
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project2-service
+spec:
+  selector:
+    app: project2
+  ports:
+    - port: 80
+      targetPort: 8080
+```
