@@ -155,10 +155,14 @@ helm install external-secrets \
 5. Enter Asks key share enter key share earlier saved and then token
 6. Create Secret Engine --> Enable New Engine --> Choose KV --> change path to desired name for example backend
 7. enter path Store secrets and save it
-8. Create a Policy name any name for example  hv-policy-dev.hcl 
+8. Create a Policy name any name for example  
+```yaml
+  #hv-policy-dev.hcl 
    path "backend/data/dev" {
         capabilities = ["create", "read", "update", "delete", "list"]
-   }   and then save it
+   }
+```
+- and then save it
 9. Create Cluster Secret store
 ```yaml
 ---
