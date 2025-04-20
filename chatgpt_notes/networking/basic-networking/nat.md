@@ -196,7 +196,7 @@ Here’s a more detailed **NAT diagram** showing multiple private devices sharin
 | 192.168.1.11 | 50001 | 203.x.x.x | 60002 |
 | 192.168.1.12 | 50002 | 203.x.x.x | 60003 |
 
----
+---a
 ### **🔹 Why is PAT Important?**
 - **Allows multiple private devices to share a single public IP**.  
 - **Prevents IPv4 exhaustion** since many private users can be behind one IP.  
