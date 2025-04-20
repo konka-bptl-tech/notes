@@ -239,5 +239,4 @@ Here's a simple `README.md` snippet with your link:
 
 This repository contains examples and resources for practicing Kubernetes Ingress configurations.
 
-🌐 [Open on GitHub](https://github.com/ullagallu123/ingress-practice)
 ```
