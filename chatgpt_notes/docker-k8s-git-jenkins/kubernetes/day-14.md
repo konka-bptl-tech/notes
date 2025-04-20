@@ -33,6 +33,12 @@ kubectl describe node <node-name> | grep -A 10 "Labels"
 ```bash
 kubectl label nodes <your-node-name> disktype=ssd
 ```
+
+```markdown
+❌ **Unlabel the node**
+```bash
+kubectl label nodes <your-node-name> disktype-
+```
 ---
 
 ```yaml
