@@ -181,7 +181,7 @@ Controller says: "Mismatch! Let me fix it..." 🔧
 
 ```bash
 #!/bin/bash
-# Create ALB Ingress Controller
+# Create ALB Ingress Controller it will create ALB,TG,Listners
 CLUSTER_NAME="karpenter"
 INGRESS_ARN="arn:aws:iam::522814728660:policy/AWSLoadBalancerControllerIAMPolicy"
 echo "Creating Service Account"
