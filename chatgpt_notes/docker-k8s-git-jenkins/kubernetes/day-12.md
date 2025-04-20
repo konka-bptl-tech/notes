@@ -1,15 +1,10 @@
 ## 🌐 Ingress in Kubernetes
-
 ---
-
 ### 📌 What is **Ingress**?
 - **Ingress** is a **Kubernetes API object** that manages **external access** to services in a cluster.
 - It acts as a **Layer 7 (Application Layer) Load Balancer**, routing external HTTP/HTTPS traffic to internal services **based on rules** (host/path).
-
 ---
-
 ### ⚙️ Ingress vs Traditional Load Balancers
-
 #### 🔸 Layer 4 Load Balancer (Transport Layer)
 - Just forwards traffic (e.g., TCP) to backend pods.
 - **No routing intelligence** — no path or host-based decisions.
@@ -231,75 +226,18 @@ helm install external-dns external-dns/external-dns \
     --set serviceAccount.name=external-dns \
     -n kube-system
 ```
+- create 2 namespaces project-1 and project2
 
-```yaml
-# Project-1
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: project1-deployment
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: project1
-  template:
-    metadata:
-      labels:
-        app: project1
-    spec:
-      containers:
-      - name: project1
-        image: busybox
-        command: ['sh', '-c', 'while true; do echo "<html><body style=\'background-color:red; color:white;\'><h1>Project1: $(hostname -i)</h1></body></html>" | nc -l -p 8080 -q 1; done']
-        ports:
-        - containerPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: project1-service
-spec:
-  selector:
-    app: project1
-  ports:
-    - port: 80
-      targetPort: 8080
+```bash
+for ns in project1 project-2; do kubectl create namespace $ns;done
 ```
 
-```yaml
-# Project-2
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: project2-deployment
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: project2
-  template:
-    metadata:
-      labels:
-        app: project2
-    spec:
-      containers:
-      - name: project2
-        image: busybox
-        command: ['sh', '-c', 'while true; do echo "<html><body style=\'background-color:purple; color:white;\'><h1>Project2: $(hostname -i)</h1></body></html>" | nc -l -p 8080 -q 1; done']
-        ports:
-        - containerPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: project2-service
-spec:
-  selector:
-    app: project2
-  ports:
-    - port: 80
-      targetPort: 8080
+Here's a simple `README.md` snippet with your link:
+
+```markdown
+# Ingress Practice
+
+This repository contains examples and resources for practicing Kubernetes Ingress configurations.
+
+🌐 [Open on GitHub](https://github.com/ullagallu123/ingress-practice)
 ```
