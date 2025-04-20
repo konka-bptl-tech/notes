@@ -14,6 +14,51 @@ nodeSelector:
   disktype: ssd
 ```
 
+```bash
+kubectl get nodes --show-labels
+```
+---
+### 🔍 To get labels of a specific node:
+```bash
+kubectl get node <node-name> --show-labels
+```
+---
+### 📦 Or to get a cleaner list using `kubectl describe`:
+```bash
+kubectl describe node <node-name> | grep -A 10 "Labels"
+```
+
+```markdown
+🏷️ **Label the node**
+```bash
+kubectl label nodes <your-node-name> disktype=ssd
+```
+---
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      nodeSelector:
+        disktype: ssd   # <-- Replace with your actual node label
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+```
+
 ---
 
 ### ✅ **Affinity & Anti-Affinity**
