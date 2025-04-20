@@ -69,6 +69,8 @@ ram ALL=(ALL) /usr/bin/ls, /usr/bin/cat
 # Netowrk Policies
 A **Network Policy** in Kubernetes is used to control the traffic flow between pods, allowing you to specify which pods can communicate with each other. By default, all pods can communicate with each other, but when a network policy is defined, it enforces restrictions on the allowed communication. It is a powerful tool for securing your applications by controlling which pods can talk to each other based on labels, namespaces, and IPs.
 
+- NetworkPolicies work at the IP and port level between Pods, not Services.
+
 ### Key Concepts of Network Policy:
 1. **Pod Selector**: Selects the pods to which the policy applies.
 2. **Ingress**: Specifies which sources (other pods or IPs) can access the pods defined by the policy.
