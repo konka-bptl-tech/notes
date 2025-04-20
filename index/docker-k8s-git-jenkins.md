@@ -89,9 +89,9 @@
 - Serivce Account
 - RBAC
 - Network Policies
+# Day-14[19]
 - Resource Quotas
 - Limit Ranges
-# Day-14[19]
 - NodeSelector
 - Affinity & Anti-Affinity
 - Pod Affinity & Anti-Affinity

@@ -1,3 +1,96 @@
+## 🔄 **Resource Quotas**
+
+### 📜 **What is Resource Quota?**
+A **Resource Quota** is a way to limit the amount of resources (CPU, memory, storage, etc.) that can be used within a namespace. It ensures that no single team or application consumes all of the available resources in the cluster.
+
+- **Scope**: A **namespace** can have multiple quotas to control resource usage.
+- **Use cases**: For multi-tenant environments, limiting resources per team, enforcing fair usage.
+
+### 🧑‍💻 **Key Resources Controlled**:
+- CPU, memory, storage
+- Number of pods, services, replicas, etc.
+
+### 📘 **Example of Resource Quota**:
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: example-quota
+  namespace: mynamespace
+spec:
+  hard:
+    requests.cpu: "4"
+    requests.memory: "8Gi"
+    limits.cpu: "8"
+    limits.memory: "16Gi"
+    pods: "10"
+    services: "5"
+```
+
+- **Explanation**:
+  - `requests.cpu`: Limits the total requested CPU in the namespace.
+  - `limits.cpu`: Limits the total allowed CPU for containers in the namespace.
+  - `pods`: Maximum number of pods allowed in the namespace.
+
+### 📊 **How to View Resource Quota**:
+```bash
+kubectl get resourcequota -n <namespace>
+```
+
+---
+
+## ⚙️ **Limit Ranges**
+
+### 📜 **What is LimitRange?**
+A **LimitRange** is a Kubernetes resource that sets default resource requests and limits for containers in a namespace. It ensures that containers do not consume resources beyond a defined range, helping with fairness and preventing a single container from monopolizing resources.
+
+- **Scope**: A **namespace** has one or more limit ranges applied to containers within that namespace.
+- **Use cases**: Enforcing resource usage for containers, defining defaults and constraints.
+
+### 🧑‍💻 **Key Resources Controlled**:
+- Memory and CPU for containers
+- Default request/limit values for containers
+
+### 📘 **Example of LimitRange**:
+```yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: example-limits
+  namespace: mynamespace
+spec:
+  limits:
+  - default:
+      cpu: "500m"
+      memory: "1Gi"
+    defaultRequest:
+      cpu: "200m"
+      memory: "512Mi"
+    type: Container
+```
+
+- **Explanation**:
+  - `default`: Defines the default `cpu` and `memory` limits for containers that don't specify them.
+  - `defaultRequest`: Defines the default `cpu` and `memory` request values for containers.
+  - `type: Container`: Specifies that the limits apply to containers.
+
+### 📊 **How to View LimitRange**:
+```bash
+kubectl get limitrange -n <namespace>
+```
+
+---
+
+## 💡 **Difference between Resource Quota and LimitRange**:
+- **Resource Quota**:
+  - Enforces **total resource limits** for the entire namespace.
+  - Example: "The total memory for all pods in this namespace cannot exceed 10Gi."
+
+- **LimitRange**:
+  - Enforces **resource requests and limits** for individual containers.
+  - Example: "Every container in this namespace must request at least 200m CPU and cannot exceed 1Gi of memory."
+
+---
 ### ✅ **Scheduler & Pod Placement**
 
 ## ⚙️ Kubernetes Scheduler: Internal Algorithm
