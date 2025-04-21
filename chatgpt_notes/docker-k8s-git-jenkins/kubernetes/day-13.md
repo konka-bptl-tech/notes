@@ -66,6 +66,22 @@ ram ALL=(ALL) /usr/bin/ls, /usr/bin/cat
   - Uses `Role` and `ClusterRole` to define permissions  
   - Bound to users or service accounts using `RoleBinding` or `ClusterRoleBinding`
 ---
+# Exercise
+1. https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-13/rbac.yaml
+   - from above url create role rolebinding cluster role cluster role binding
+2. Create 2 EC2 instances siva and ram
+3. Create IAM roles for siva and ram and create EKS describe policy[It list down avialable eks clusters] and attach IAM roles of siva ans ram
+4. update aws auth config example referece avialblein above github url
+5. Install eksctl and kubectl of eks compatible
+6. Attach IAM roles to each instance
+7. aws sts get-caller-identity check the identity of each server
+8. aws eks update-kubeconfig --region region-code --name my-cluster get kube config file
+9. Check if siva has access to all cluster resources
+   - kubectl auth can-i get pods --all-namespaces --as siva
+10. Check ram only has access to expense namespace
+   - kubectl auth can-i list deployments -n expense --as ram
+   - kubectl auth can-i list deployments -n kube-system --as ram  # should be "no"
+---
 # Netowrk Policies
 A **Network Policy** in Kubernetes is used to control the traffic flow between pods, allowing you to specify which pods can communicate with each other. By default, all pods can communicate with each other, but when a network policy is defined, it enforces restrictions on the allowed communication. It is a powerful tool for securing your applications by controlling which pods can talk to each other based on labels, namespaces, and IPs.
 
@@ -210,3 +226,14 @@ spec:
 
 ### Conclusion:
 Kubernetes Network Policies provide a way to secure communication between pods and services by restricting traffic based on labels, namespaces, and IPs. By using **ingress** and **egress** rules, along with **selectors** for pods, namespaces, and IP blocks, you can achieve very granular control over how your services interact within the cluster.
+
+# Exercise
+1. Launch Kubeadm cluster
+2. Exercise is I have red,blue,alpine-access and alipne-block pods are deployed in same ns
+3. So by default all pods are can reachable, you can not exec red and blue pods
+4. Test the connection from alpine-access and alpine-block to access red and blue services so before that install curl in alpine pods
+   apk update, apk add curl
+5. curl red-service and blue-service alpine pods are reachable by default no restriction
+6. apply # deny-all-ingress-blue policy 
+7. now test curl to blue pod curl blue-service now you're not reachable
+8. red-ingress-only-access-from-alpine-access-pod apply policy now you're only access red pod from alpine-access pod only not alpine-block
