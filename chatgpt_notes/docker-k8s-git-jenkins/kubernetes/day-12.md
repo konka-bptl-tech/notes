@@ -232,6 +232,5 @@ helm install external-dns external-dns/external-dns \
 for ns in project1 project-2; do kubectl create namespace $ns;done
 ```
 
-```markdown
-➡️ [Click here to view Day-12 Ingress Examples](https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-12/)
-```
+
+➡️ [https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-12/](https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-12/)
