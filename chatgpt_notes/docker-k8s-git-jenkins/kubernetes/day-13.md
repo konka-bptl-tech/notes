@@ -236,4 +236,4 @@ Kubernetes Network Policies provide a way to secure communication between pods a
 5. curl red-service and blue-service alpine pods are reachable by default no restriction
 6. apply # deny-all-ingress-blue policy 
 7. now test curl to blue pod curl blue-service now you're not reachable
-8. red-ingress-only-access-from-alpine-access-pod apply policy now you're only access red pod from alpine-access pod only not alpine-block
+8. red-ingress-only-access-from-alpine-access-pod apply policy now you're only access red pod from alpine-access pod only not from alpine-block
