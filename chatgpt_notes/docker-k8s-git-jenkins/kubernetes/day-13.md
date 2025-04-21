@@ -229,7 +229,7 @@ Kubernetes Network Policies provide a way to secure communication between pods a
 
 # Exercise
 1. Launch Kubeadm cluster
-2. Exercise is I have red,blue,alpine-access and alipne-block pods are deployed in same ns
+2. I have red,blue,alpine-access and alipne-block pods are deployed in same ns
 3. So by default all pods are can reachable, you can not exec red and blue pods
 4. Test the connection from alpine-access and alpine-block to access red and blue services so before that install curl in alpine pods
    apk update, apk add curl
