@@ -121,8 +121,6 @@ Scoring considers:
 
 ---
 
-Want to see this flow visually or with a real example YAML?
-
 - **Kube-Scheduler** is responsible for deciding which **node** a **Pod** should be scheduled on.
 - **Pod stays in a `Pending` state** if no suitable node is found.
 
