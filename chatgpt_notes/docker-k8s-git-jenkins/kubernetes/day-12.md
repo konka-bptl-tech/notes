@@ -238,5 +238,5 @@ Here's a simple `README.md` snippet with your link:
 # Ingress Practice
 
 This repository contains examples and resources for practicing Kubernetes Ingress configurations.
-
+(https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-12/)[https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-12/]
 ```
