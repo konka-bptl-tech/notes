@@ -104,4 +104,116 @@
 
 # AWS
 
-# Day-1[EC2]
+# Intro
+- DataCenter
+- Cloud
+- Regions
+- Avaialability Zones
+- IAAS
+- PASS
+- SAAS
+
+# [VPC][Networking]
+1. Network Basics
+   - IP Addressing,
+   - Subnetting,
+   - public,private Subents 
+   - Subnet Mask,
+   - CIDR
+   - firewalls
+   - NAT
+2. VPC Components
+   - CIDR Range, Public and Private Subnets
+   - Route Tables, Subnet Association,Routes
+   - IGW,EIP,NatGW
+   - SG,NACL
+   - Peering,TransitGW
+   - Endpoints
+   - VPC flow logs
+
+# [EC2][Compute]
+1. EC2 
+   - Instance Types
+   - spot requests
+   - savings plans
+   - reserved instances
+   - capacity reservations
+   - dedicated hosts
+   - AMI's
+   - Key-Pairs
+   - Network interfaces
+2. EBS volumes
+   - Terminology: IOPS,Latency,ThroughPut
+   - What is block storage
+   - gp2,gp3,io1,io2,sc1,st1
+   - snapshots
+   - Life Cycle Manager
+3. Network Basics
+   - Proxy,ReverseProxy,ForwardProxy
+   - ISO/OSI and TCP/IP model
+   - Nginx
+4. SSL/TLS
+5. LoadBalancing
+   - Terminology:HighAvailability,Fault Tolerance,SSL Termination
+   - ALB
+   - NLB
+   - TG,Listners,SNI
+6. Scaling
+   - Terminology: Scaling,Horizontal Scaling[ScaleOut,ScaleIn],Vertical Scaling[ScaleUp,ScaleIn]
+   - Launch Template
+   - ASG
+# EFS[FileSharing]
+  - FIle Storage
+  - EFS
+# IAM[Identity&AccessManagement]
+- IAM
+  - Users
+  - Groups
+  - Roles
+  - Policies
+    - AWS Managed
+    - Customer Managed
+    - Inline Polcies
+- Identiy Providers
+- Access Analyzer
+  - External Access
+  - Unused Access
+
+# Route53
+- What is DNS How DNS was Working
+- Route53
+  - HostedZones
+    - public and private hosted zone
+  - Domain Registration
+  - Records
+    - A
+    - AAAA
+    - CNAME
+    - ALIAS
+  - Routing Policy
+# S3
+- Object Storage
+- S3
+   - Features
+   - Properties
+   - Bucket Policy
+   - CORS
+   - LifeCycle Rules
+# RDS
+  - Mysql
+# MemCacheD
+  - caching
+  - redis
+# CloudFront
+# Cloud Front[logging]
+# Cloud Watch[OBservaility]
+# Container Services
+- ECS
+- EKS
+- ECR
+# Lambda Functions
+# APIGW
+# WAF
+# GuardDuty
+# CloudFormation
+# CodeBuild,CodePipeline,CodeDeploy
