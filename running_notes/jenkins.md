@@ -83,3 +83,16 @@ SLEEP_TIME - Choice parameter
 
 Branch Specifier
 */${BRANCH_NAME}
+
+
+
+
+
+
+
+
+
+-----
+Conitnous Delivery = Where code changes are automaticaly prepared for a release to prod
+
+Build = take source code and convert into a single artifact which can be convert into QA ot customer
