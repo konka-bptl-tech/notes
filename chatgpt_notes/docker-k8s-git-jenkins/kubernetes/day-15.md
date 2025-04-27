@@ -63,3 +63,76 @@ These happen **after** a pod has been scheduled onto a node.
      - Network policy blocking.
      - DNS issues.
      - Not passing readiness probes.
+
+---
+That's a solid list 👇 Here's a bit more structure and detail to help you (or anyone reviewing this) troubleshoot **Pod Scheduling** and **Pod Execution** issues in Kubernetes more effectively:
+
+---
+
+### 🚫 **Pod Scheduling Errors**
+
+These errors prevent the pod from being scheduled onto a node.
+
+#### 1. **Taints and Tolerations**
+- **Symptom**: `pod has unbound PersistentVolumeClaims` or `No nodes are available that match all of the following predicates...`
+- **Fix**: Add tolerations in pod spec to match node taints.
+
+#### 2. **Node Affinity / Anti-Affinity**
+- **Symptom**: Pod remains in `Pending` state.
+- **Fix**: Check `nodeAffinity` settings in your deployment and make sure there are nodes matching the rules.
+
+#### 3. **Resource Quotas & Limits**
+- **Symptom**: Pod stuck in `Pending`, or admission errors.
+- **Fix**: Check namespace-level resource quotas (`kubectl describe quota`) and ensure pod requests/limits are within them.
+
+#### 4. **Unschedulable Node Conditions**
+- **Examples**:
+  - Not enough CPU or memory
+  - Node selectors not matching
+- **Fix**: Use `kubectl describe pod <pod-name>` and look at `Events`.
+
+---
+
+### 💥 **Pod Execution Errors**
+
+These happen **after** scheduling — pod lands on a node but fails to run properly.
+
+#### 1. **ImagePullBackOff / ErrImagePull**
+- **Common Causes**:
+  - ❌ Tag mismatch
+  - ❌ Image doesn't exist in registry
+  - ❌ Private registry → lack of pull secret
+- **Fix**:
+  - Check container image URL and tag.
+  - Check if ImagePullSecret is correctly defined and accessible.
+
+#### 2. **CrashLoopBackOff**
+- **Common Causes**:
+  - App crashed repeatedly
+  - Misconfiguration in env vars, command, args
+  - Not enough resources (OOMKilled)
+- **Fix**:
+  - Inspect logs: `kubectl logs <pod-name> -c <container>`
+  - Check exit code, increase memory/CPU limits if needed.
+
+#### 3. **ConfigMap / Secret Errors**
+- **Symptoms**:
+  - Pod fails to start
+  - Mount failures or env vars not resolved
+- **Fix**:
+  - Check if the ConfigMap/Secret exists.
+  - Ensure it's mounted or injected properly.
+
+#### 4. **Labels & Selectors Mismatch**
+- **Symptoms**:
+  - Service doesn’t route traffic
+  - HPA doesn’t scale pods
+- **Fix**: Ensure the labels on pods match the selectors defined in Service/Deployment/HPA.
+
+#### 5. **Backend Pods Not Running**
+- **Symptoms**:
+  - Frontend pods show `Connection refused` or timeouts.
+- **Fix**:
+  - Check if backend pods are actually `Running` and `Ready`.
+  - Verify readiness probes, service configurations, and DNS.
+---
