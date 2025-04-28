@@ -1,0 +1,4 @@
+- Reset & Revert
+- Brnaching Strategy
+- Git Tags
+- GitHub Actions basics
