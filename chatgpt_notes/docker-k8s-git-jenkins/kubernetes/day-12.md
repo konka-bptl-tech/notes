@@ -233,4 +233,4 @@ for ns in project1 project-2; do kubectl create namespace $ns;done
 ```
 
 # Exercise
-➡️ [https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-12/](https://vscode.dev/github/ullagallu123/k8s-practicle-guide/blob/main/day-12/)
+➡️ [https://github.com/ullagallu123/k8s-practicle-guide/blob/main/day-12/](https://github.com/ullagallu123/k8s-practicle-guide/blob/main/day-12/)
