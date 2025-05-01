@@ -12,7 +12,7 @@
 www.vm.konkas.tech (DNS)
     ↓
 CloudFront (CDN, SSL, WAF, Caching)
-    ↓
+    ↓ 
 Internal ALB (Private ALB)
     ↓
 Frontend (ReactJS on VM, ASG)
@@ -30,6 +30,7 @@ Packer: AMI Build
 Terraform: Infra Automation
 Prometheus&Grafana: Metrics
 Elastic Stack: Logs
+
 # Serverless-Hosted Architecture
 www.serverless.konkas.tech (DNS - Route53 or similar)
     ↓
@@ -44,6 +45,10 @@ Backend (NodeJS app running on ECS - Fargate or EC2 launch type)
 Elasticache (Redis for caching)
     ↓
 RDS (Database)
+CI/CD: GithubActions
+Docker: AMI Build
+Observability: CloudWatch
+
 # ECS Hosted
 www.ecs.konkas.tech (DNS)
     ↓
@@ -58,6 +63,11 @@ ECS Service (Frontend + Backend containers)
 Elasticache (Redis)
     ↓
 RDS (Database)
+CI/CD: Jenkins Pipelines
+Docker: Image
+Terraform: CloudFormation
+Observability: CloudWatch
+
 # EKS Hosted
 www.eks.konkas.tech (DNS)
     ↓
@@ -72,6 +82,13 @@ Frontend + Backend (Pod containers in EKS)
 Elasticache (Redis for caching)
     ↓
 RDS (Relational Database)
+
+CI/CD: Jenkins Pipelines
+Docker: Image Build
+Terraform: Infra Automation
+Prometheus&Grafana: Metrics
+Elastic Stack: Logs
+Kiali&Jaegan: Traces
 ---
 
 ### **Project 1: VM-Based Architecture**
