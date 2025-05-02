@@ -1,7 +1,3 @@
-Great, Konka! Here's your **Day 1 – English Phrases Pack** with **5 sentences per topic** for today:
-
----
-
 ### 🔹 **General Conversations (Friendly and Casual)**
 
 1. *“Hey, how’s your day going so far?”*
