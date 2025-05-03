@@ -103,3 +103,38 @@
 4. “Just taking it easy today.”
 5. “Let’s catch up soon — it’s been a while!”
 ---
+**General Conversations**
+1. What have you been up to lately?
+2. I totally forgot about that!
+3. That’s interesting, tell me more.
+4. I’ll get back to you on that.
+5. Let’s talk about it later.
+---
+**At Work / Professional**
+1. I’ll update the status in the tracker.
+2. Can you please review my pull request?
+3. The meeting has been postponed.
+4. This task is in progress.
+5. Let’s keep the communication clear and direct.
+---
+**Agreeing & Disagreeing**
+1. I think you're absolutely right.
+2. That makes sense to me.
+3. I’m not sure I agree with that approach.
+4. Let’s consider other options as well.
+5. You may be right, but let's double-check.
+---
+**Making Requests**
+1. Can you send me the link?
+2. Please approve the changes when you're free.
+3. I need a bit of help with this.
+4. Could you share your feedback?
+5. Please remind me tomorrow if I forget.
+---
+**Daily Life & Social Situations**
+1. I’m planning to sleep early today.
+2. Let’s go out for dinner sometime.
+3. I’ve been watching a new series.
+4. It was a busy day, but I managed.
+5. I just want to relax for a while.
+---
