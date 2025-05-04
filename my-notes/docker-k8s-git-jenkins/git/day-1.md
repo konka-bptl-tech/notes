@@ -1,6 +1,5 @@
 ### ✅ What is Git?
 Git is a distributed version control system where each developer has a full clone of the repository. It keeps track of code changes over time through commits (snapshots), allowing each developer to work independently while also improving collaboration.
-Collaboration means working together with others to achieve a common goal.
 
 In the context of Git and software development, collaboration refers to:
 
