@@ -1,9 +1,9 @@
-- Provids services like networking , computes, storage, dbs over thw internet
+- Provids services like networking , computes, storage, dbs over the internet
 - instead of maintainning physical H/W or infra locally let's can manage provides the services to access users on-demmand over the internet 
 
 Benefits of Cloud Computing:
 - Sclable
-- COst Efficiency[pay-as-you-go]
+- Cost Efficiency[pay-as-you-go]
 - Flexibility[access resources anywhere with an internet connection]
 - Reliability[provides high avaialbiltiy]
 - Security[follow robust securtiy rules]
@@ -30,3 +30,24 @@ Types Of Cloud Services:
 
 region: geographical location
 az's: actual datacenters are there
+
+EC2: Create servers offers resizable compute capacity
+- scalbility
+- variety of offers instances
+- ensure secuirty using sg and key-value pair
+- integrations with other services
+- flexible pricing
+
+Types of instances:
+1. General purpose[t,m]
+2. Compute Optimized[c][C5]
+3. Memory Optimized[r,x1][R5,R4]
+4. Storage Optimized[d,i]
+5. GPU
+6. FPGA
+
+
+status checks:
+1. System Status Checks
+2. Instance Status Checks
+3. Volume Status Checks
