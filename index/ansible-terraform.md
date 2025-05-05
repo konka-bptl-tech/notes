@@ -1,7 +1,5 @@
 ## 🧠 **Ansible 10-Day Learning Plan (From Zero to Hero)**
-
 ---
-
 ### ✅ **📅 Day 1: Why Ansible? – The Foundation**
 - ❓ Problems with manual configuration
 - 🧩 What is Configuration Management
@@ -9,26 +7,20 @@
 - ✨ Ansible vs other tools (Puppet, Chef, Terraform)
 - ⚙️ Agentless Architecture (SSH based)
 - 🔁 Push-based vs Pull-based
-
 ---
-
 ### ✅ **📅 Day 2: Setup and First Run**
 - 💻 Installing Ansible (on Linux/macOS/WSL)
 - 📄 Ansible inventory (`/etc/ansible/hosts`)
 - 🔐 SSH connectivity to remote nodes
 - 🧪 First ad-hoc commands using `ansible`
 - 🔁 Modules: `ping`, `copy`, `command`, `shell`, `yum/apt`, `file`
-
 ---
-
 ### ✅ **📅 Day 3: Playbooks Basics**
 - 📘 What is a playbook?
 - ✅ YAML syntax
 - 🧱 Playbook structure: `hosts`, `tasks`, `become`, `vars`
 - 🧪 Hands-on writing your first playbook
-
 ---
-
 ### ✅ **📅 Day 4: Variables & Facts**
 - 💡 Defining variables in:
   - Playbooks
@@ -37,49 +29,37 @@
   - `vars_files`
 - 📋 `ansible_facts` (`setup` module)
 - ⚙️ `gather_facts: false` for performance
-
 ---
-
 ### ✅ **📅 Day 5: Conditionals, Loops, and Handlers**
 - 🔄 `when` conditions (based on facts, variables)
 - 🔁 `with_items`, `loop`, `with_dict`, `with_nested`
 - 🚨 Handlers & `notify`
 - 🪓 `block`, `rescue`, `always` blocks
-
 ---
-
 ### ✅ **📅 Day 6: Roles**
 - 📂 Role directory structure (`roles/`)
 - 🎭 Creating reusable roles
 - 📥 Importing community roles (Ansible Galaxy)
 - 🔁 Role dependencies
-
 ---
-
 ### ✅ **📅 Day 7: Templates and Jinja2**
 - 🧾 `templates/` directory
 - ✨ Jinja2 syntax (`{{ variable }}`, loops, ifs)
 - 📄 Using `template:` module
 - 🧪 Deploy dynamic config files (like `nginx.conf`, `httpd.conf`)
-
 ---
-
 ### ✅ **📅 Day 8: Ansible Vault**
 - 🔒 Encrypt secrets (`ansible-vault encrypt`)
 - 🔐 Commands: `edit`, `view`, `decrypt`
 - 🔐 Vault with playbooks (`--ask-vault-pass`)
 - 🔁 Best practices for secret handling
-
 ---
-
 ### ✅ **📅 Day 9: Advanced Inventory and Tags**
 - 📁 Inventory formats: INI, YAML, dynamic
 - 🏷️ Using tags for selective task execution (`--tags`, `--skip-tags`)
 - ⚙️ Grouping hosts, using patterns
 - 🌐 Dynamic inventories (AWS EC2, GCP)
-
 ---
-
 ### ✅ **📅 Day 10: Real-World Stuff**
 - 🧪 `check` mode (`--check`)
 - 🧩 `ansible-lint`, idempotency checks
@@ -87,21 +67,17 @@
 - 🛠️ Troubleshooting with `-vvv`
 - 📦 CI/CD integration
 - 💡 Best practices for directory structure
-
 ---
-
 ## 🧰 BONUS Topics (If time allows):
 - 🧠 Custom modules
 - 📦 Collections
 - ☁️ Ansible with AWS, Azure, GCP modules
 - 🔁 `delegate_to`, `serial`, `run_once`
 - 🔃 Pull-based automation using Ansible Pull
-
 ---
 # Terraform
 ---
 ## ✅ Your Current Plan with Suggested Enhancements
-
 ### **📅 Day 1: Foundation**
 - ✔️ Problems with manual infra
 - ✔️ What is IaC
