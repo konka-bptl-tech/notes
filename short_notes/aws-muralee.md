@@ -46,8 +46,62 @@ Types of instances:
 5. GPU
 6. FPGA
 
+/dev/xvda = amazon linux
+/dev/sda1 = ununtu
 
 status checks:
 1. System Status Checks
 2. Instance Status Checks
 3. Volume Status Checks
+
+EIP = is astatic IP which is not change for example you instance on every reboot public IP change so if we attach EIP on reboot also IP change
+Can we Attach EIP to spot instance?
+
+1. Spot instances
+2. On-demand[used]
+3. Saving Plans[Actually we were utilizing saving plans]
+4. RI
+5. Dedicated Hosts
+6. Dedicated Instances
+7. Scheduled Instances
+8. Capacity reservations
+
+Regarding issue with ec2 what you do
+- opening aws ticket
+- requesting service quotas[improve count of vpc's,EIP,instances]
+- To raise requests related to IAM you can only do it from north virginia
+- 99% we were using support plan
+
+- User data runs only once during the first EC2 boot. If you stop and start the instance or update the script, it won’t run again.
+- To run scripts on every change, we use `null_resource` with triggers like file hash. It re-executes the script when the content changes.
+
+EBS
+---
+- EBS volumes are highly avialalble relable persistent volumes to store data permanently we were using EBS volumes
+features: elasticity,durability,snapshotting,encryption,availability
+
+Volumes Types:
+1. General Purpose[gp2,gp3]
+   gp2 = defaut volume it supports only throughput not iops
+   gp3 = less cost compare to gp2 and iops configurable
+- WHat type of volume do you use currently? we are using gp2 planning migrate to gp3 
+2. Provisioned IOPs[io1,io2]
+3. ThoughPut optimized[HDD][st1]
+4. Cold HDD[sc1]
+
+volumes are az bound means instances in same az instance only can be attachable 
+
+in real time 99% we did not use KMS to encrypt the data
+
+Mount the volume process:
+- blkid
+- lsblk
+- sudo file -s /dev/xvdf
+- mkfs -t xfs /dev/xvdf
+- yum install xfsprogs
+- mkdir data
+- sudo mount /dev/xvdf /data
+
+I have EBS volume modify volume 400GB to 500GB after again modify volume from 500Gb to 600GB it is possible you have to wait for 6 hours for second volume modify
+
+Best way to detach the volume first login to the server and unmount it then detach otherwise may be data corruption happends withou unmount detach
