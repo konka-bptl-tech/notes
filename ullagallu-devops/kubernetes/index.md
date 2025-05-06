@@ -69,6 +69,9 @@
 - Affinity & Anti-Affinity
 - Pod Affinity & Anti-Affinity
 - Taints & Tolerations
+- PriorityClass
+- Preemption
+- PDB
 # Day-15
 - k8s errors simulation
 # Day-16
