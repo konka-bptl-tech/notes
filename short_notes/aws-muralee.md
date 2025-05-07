@@ -1,3 +1,4 @@
+# Basics
 What is Cloud Computing
 - Provids services like networking , computes, storage, dbs over the internet
 - instead of maintainning physical H/W or infra locally let's can manage provides the services to access users on-demmand over the internet 
@@ -32,6 +33,7 @@ Types Of Cloud Services:
 region: geographical location
 az's: actual datacenters are there
 
+# EC2
 EC2: Create servers offers resizable compute capacity
 - scalbility
 - variety of offers instances
@@ -76,8 +78,7 @@ Regarding issue with ec2 what you do
 - User data runs only once during the first EC2 boot. If you stop and start the instance or update the script, it won’t run again.
 - To run scripts on every change, we use `null_resource` with triggers like file hash. It re-executes the script when the content changes.
 
-EBS
----
+# EBS
 - EBS volumes are highly avialalble relable persistent volumes to store data permanently we were using EBS volumes
 features: elasticity,durability,snapshotting,encryption,availability
 
@@ -124,3 +125,5 @@ If we want to move AMI to another region we need to first take snapshot then cop
 instance store[temporary] = comes with ec2 instance when you restart ec2 instance
 
 Amazon Data lifecycle = automatic creation,retention copy and deletion of snapshots  and AMI's 
+
+# IAM

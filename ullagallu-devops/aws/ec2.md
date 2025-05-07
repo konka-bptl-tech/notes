@@ -55,37 +55,57 @@
 * **User Data**: Runs only **once** on first boot.
 * For repeated execution (e.g., config updates), use **Terraform `null_resource`** with **file hash triggers**.
 ---
-## 💾 EBS – Elastic Block Store
-### ✅ Overview
-* Block storage for **EC2 instances**.
-* **Persistent**, **highly available**, and **reliable**.
-* Used for: OS boot volumes, app data, backups, and databases.
+Absolutely, Konka! Here's the **enhanced version** of your EBS notes with **Throughput** and **IOPS** details clearly explained and included in the right context.
+
 ---
+
+## 💾 EBS – Elastic Block Store
+
+### ✅ Overview
+
+* Block-level storage used with EC2.
+* Provides **persistent**, **durable**, and **highly available** storage.
+* Suitable for **boot volumes**, **databases**, **app data**, and **backups**.
+
+---
+
 ### ⚙️ Key Features
-* **Elasticity** – Resize anytime
-* **Durability** – 99.999% availability
-* **Snapshotting** – For backup & restore
-* **Encryption** – Optional (at rest + in transit)
-* **AZ-Scoped** – Must attach within the same AZ
-* **Availability** – Auto replication in the same AZ
+
+* **Elasticity** – Can resize volumes on the fly.
+* **Durability** – 99.999% availability within a single AZ.
+* **Snapshotting** – Create point-in-time backups.
+* **Encryption** – Optional (KMS or default key).
+* **AZ-Scoped** – Volumes must be attached to EC2s in the same AZ.
+* **Availability** – Replicated automatically within the AZ.
+
+---
+
+### 📊 Performance Metrics
+
+| Metric                                          | Description                                                                                                             |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **IOPS** *(Input/Output Operations Per Second)* | Measures number of read/write operations per second. Important for **transaction-heavy workloads** like databases.      |
+| **Throughput**                                  | Measures **data transfer rate** (MB/s). Important for **large, sequential workloads** like video streaming or big data. |
+> gp2, gp3, io1, and io2 support **IOPS**
+> gp3, st1 support high **throughput**
 ---
 ### 📦 Volume Types
-1. **General Purpose SSD**
-   * `gp2`: Default, burst-based performance
-   * `gp3`: Cost-efficient, configurable IOPS and throughput
-     > ✅ *We use `gp2`, planning to migrate to `gp3`*
-2. **Provisioned IOPS SSD**
-   * `io1`, `io2`: For high-performance DB workloads
-3. **Throughput Optimized HDD**
-   * `st1`: For streaming large volumes of data
-4. **Cold HDD**
-   * `sc1`: Low-cost storage for infrequently accessed data
+| Type                               | IOPS                                  | Throughput       | Use Case                                   |
+| ---------------------------------- | ------------------------------------- | ---------------- | ------------------------------------------ |
+| **gp2** (General Purpose SSD)      | Baseline 3 IOPS/GB (burst up to 3000) | Up to 250 MB/s   | Default volume, general use                |
+| **gp3** (General Purpose SSD)      | Up to 16,000 (configurable)           | Up to 1,000 MB/s | Better cost & performance than gp2         |
+| **io1/io2** (Provisioned IOPS SSD) | Up to 64,000                          | Up to 1,000 MB/s | Databases, critical apps needing high IOPS |
+| **st1** (Throughput-Optimized HDD) | 500 IOPS (burst)                      | Up to 500 MB/s   | Big data, log processing, data lakes       |
+| **sc1** (Cold HDD)                 | 250 IOPS (burst)                      | Up to 250 MB/s   | Archive, infrequently accessed data        |
+> ✅ *We are currently using `gp2` volumes and planning to migrate to `gp3`.*
 ---
 ### 🔒 Encryption
-* **Not used** in most real-time use cases unless compliance needed.
-* **Snapshots** of encrypted volumes remain encrypted.
-* To encrypt an **unencrypted volume**:
-  * Create snapshot → Copy snapshot with "Enable Encryption" → Restore.
+* Default disabled. Can enable during volume or snapshot creation.
+* **Snapshots of encrypted volumes remain encrypted.**
+* To encrypt an unencrypted volume:
+  1. Take snapshot
+  2. Copy snapshot with encryption enabled
+  3. Create a new encrypted volume from it
 ---
 ### 🛠️ Mounting Process
 ```bash
@@ -99,41 +119,106 @@ sudo mount /dev/xvdf /data
 ```
 ---
 ### 🔄 Modify Volumes
-* Volume can be resized (e.g., 400GB → 500GB → 600GB)
-* Must **wait \~6 hours** between modifications.
+* You can resize volumes (e.g., 400GB → 500GB → 600GB).
+* Need to **wait \~6 hours** before another resize.
+* For `gp3`, you can **adjust size, IOPS, and throughput** independently.
 ---
 ### 📌 Detaching Best Practices
 * Always **unmount** before detaching.
-* Direct detach without unmounting can cause **data corruption**.
+* Detaching directly without unmounting may cause **data corruption**.
 ---
 ### 📸 Snapshots
-* **Point-in-time** backup of EBS volume.
-* Stored in **S3** (not user-visible).
-* **Incremental** – Only changed blocks are saved.
-* Includes **data, settings, configurations**.
-* Used for **backups** and **disaster recovery (DR)**.
+* **Point-in-time backup** stored in **S3**.
+* **Incremental** – Only changed blocks are backed up.
+* Used for:
+  * Disaster Recovery
+  * Backup
+  * Region migration
 ---
 ### 🧱 Instance Store (Ephemeral Storage)
-| Feature          | Description                                                       |
-| ---------------- | ----------------------------------------------------------------- |
-| Type             | Temporary block-level storage physically attached to the EC2 host |
-| Use Case         | High-speed cache, buffers, temp data                              |
-| Data Persistence | ❌ Lost if instance stops or fails                                 |
-| Performance      | ⚡ Very high (directly attached NVMe or SSD)                       |
-| Backup possible  | ❌ No                                                              |
-| Volatile         | Yes – suitable only for non-critical data                         |
-> 📝 Instance store is not available for all instance types (e.g., `t2.micro` doesn’t support it).
+| Feature     | Description                                                     |
+| ----------- | --------------------------------------------------------------- |
+| Type        | **Temporary** block storage physically attached to the EC2 host |
+| Lifecycle   | Data is lost if the instance is stopped/terminated              |
+| Use Case    | High-speed cache, buffer, temp files                            |
+| Performance | Extremely fast (NVMe/SSD-based)                                 |
+| Backup      | ❌ Not possible                                                  |
+| Data Safety | ❌ Volatile – Do not use for persistent data                     
+> Not available on all instance types (e.g., T2). Use only for **non-critical temp storage**.
 ---
 ### 📦 AMI – Amazon Machine Image
-* Pre-built template to launch EC2s (OS + apps + settings).
-* Immutable – can launch as many instances as needed.
-* For region copy:
-
-  * Snapshot the root volume → Copy snapshot to new region → Create AMI there
+* Pre-configured template with OS + settings + app config.
+* Launch as many EC2s as needed – ensures **immutability**.
+* To copy AMI to another region:
+  * Snapshot → Copy snapshot to region → Create AMI from it
 ---
 ### 🔁 Amazon Data Lifecycle Manager (DLM)
-* Automatically manages:
-  * Snapshots
-  * AMI creation
-  * Retention & deletion policies
+* Automates:
+  * Snapshot creation
+  * AMI lifecycle
+  * Retention & deletion
 ---
+### ✅ 1. **What is IOPS?**
+IOPS = **Input/Output Operations Per Second**
+* Measures **how many read/write operations** happen in 1 second.
+* Think of it as **speed for small tasks** like reading/writing rows in a database.
+📌 Example: Reading 100 small records from MySQL per second → **needs high IOPS**
+---
+### ✅ 2. **What is Throughput?**
+Throughput = **How much data (MB/s) can be transferred per second**
+* Measures **data transfer rate** – ideal for large files.
+* Think of it as **speed for big data transfers**.
+📌 Example: Copying a 1GB log file continuously → **needs high Throughput**
+---
+### 🔁 Key Difference (Short and Sweet)
+| Term           | Best for...                  | Think of it like...        |
+| -------------- | ---------------------------- | -------------------------- |
+| **IOPS**       | Many **small reads/writes**  | How fast you can do tasks  |
+| **Throughput** | Fewer **large reads/writes** | How much data you can move |
+---
+### ✅ 3. **Which EBS Volumes Support What?**
+| EBS Volume  | IOPS Focused?               | Throughput Focused?      | Use Case             |
+| ----------- | --------------------------- | ------------------------ | -------------------- |
+| **gp3**     | ✅ Yes (up to 16,000)        | ✅ Yes (up to 1,000 MB/s) | Web apps, DBs        |
+| **gp2**     | ✅ Yes (scales with size)    | 🚫 Not optimized         | General use          |
+| **io1/io2** | ✅ Best (up to 256,000 IOPS) | ✅ High throughput too    | High-end DBs         |
+| **st1**     | 🚫 Not many IOPS            | ✅ Best (up to 500 MB/s)  | Big data/logs        |
+| **sc1**     | 🚫 Very low                 | 🚫 Very low              | Archive/cold storage |
+---
+### 🔚 In One Line:
+* **Choose IOPS** when you need **speed for small operations** (databases).
+* **Choose Throughput** when you need **fast transfer of large files** (big data).
+---
+### ✅ 1. **What is Latency?**
+**Latency = Delay.**
+It means **how long it takes to start a read/write operation** after a request is made.
+📌 Think of it as **waiting time** before the action begins.
+---
+### 🔁 Difference between IOPS, Throughput, and Latency:
+| Term           | Meaning                               | Example                              | Focus Area                           |
+| -------------- | ------------------------------------- | ------------------------------------ | ------------------------------------ |
+| **IOPS**       | Number of operations per second       | Reading 100 small records per second | Speed of processing many small tasks |
+| **Throughput** | Amount of data transferred per second | Copying a 1GB video in 2 seconds     | Speed of moving large files          |
+| **Latency**    | Time delay before operation starts    | 5 ms delay before DB query starts    | How quickly the system reacts        |
+---
+### ✅ 2. **Analogy (Fast Food Drive-Thru)**
+* **Latency** = Time to reach the counter and place the order.
+* **IOPS** = How many small meals the kitchen can serve per second.
+* **Throughput** = How many **kgs of food** are coming out per second.
+---
+### ✅ 3. Why Latency Matters?
+* **Low latency** = Faster **response time**, critical for **real-time apps** like:
+  * Databases
+  * Web applications
+  * Financial systems
+📌 AWS premium volumes like **io2 Block Express** offer **ultra-low latency (sub-millisecond)** for high-performance use cases.
+---
+### ✅ 4. Summary (When to Focus on What?)
+| Situation                          | You Care About...           |
+| ---------------------------------- | --------------------------- |
+| Real-time app (DB, APIs)           | **Low Latency** + High IOPS |
+| Heavy read/write DB (Postgres)     | **High IOPS**               |
+| Big file processing (logs, videos) | **High Throughput**         |
+---
+Would you like a real-world scenario (e.g., database vs. data pipeline) to connect all three terms together?
+
