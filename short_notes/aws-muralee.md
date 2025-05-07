@@ -127,3 +127,48 @@ instance store[temporary] = comes with ec2 instance when you restart ec2 instanc
 Amazon Data lifecycle = automatic creation,retention copy and deletion of snapshots  and AMI's 
 
 # IAM
+1. What is Authentication?
+2. What is Authrozation?
+
+- help us t control access of resources in aws
+- Iam enables user,groups,roles and policies securly access services 
+
+- It is a Global service
+- centrally manages user access and polices
+- shared the access throuh users,groups and roles
+- follow the least privilege policy
+- add another layer of security by enabling MFA
+
+- IAM User[credentials]
+- IAM Group
+- IAM Roles[nocredentials configured no need to expose it creates short lived credentials]
+  roles are not tied into any user or group
+- What is identity
+- Sts-get-calleridentiy examples
+- sts tokens explanation
+- trust policy
+- Identity Providers
+- Policies[Permissions]
+  - Aws Managed
+  - Customer Managed[]
+  - Inline[one-to-one][strictly bound with One identity]
+- Policy Example and explain each and everything
+- What is Permission boundary
+- What is ARN why every service or object have an ARN
+- access analyzer
+- credential report
+
+- What are the IAM Best practices
+
+ Have 2 teams dev and db 
+ one db teams belongs to development another one is prod 
+ dev team
+
+ Have 2 db teams one is belongs to dev and another one is belongs to productions envs
+ So dev env db team can access only dev db cannot dev db like wise prod db team can be only access prod db but can describe dev db
+ 
+IAM & S3 Question I had faced in interview... could you please answer it?
+
+IAM-user01 has Full access to all S3 buckets but in bucket01 policy there is explicit deny to use01
+
+IAM-user02 has no S3 access explicitly deny to buckect-02 but in bucket policy user02 has full access
