@@ -1,3 +1,4 @@
+What is Cloud Computing
 - Provids services like networking , computes, storage, dbs over the internet
 - instead of maintainning physical H/W or infra locally let's can manage provides the services to access users on-demmand over the internet 
 
@@ -105,3 +106,21 @@ Mount the volume process:
 I have EBS volume modify volume 400GB to 500GB after again modify volume from 500Gb to 600GB it is possible you have to wait for 6 hours for second volume modify
 
 Best way to detach the volume first login to the server and unmount it then detach otherwise may be data corruption happends withou unmount detach
+
+snapshots are point-in-backup of EBS volumes which are incremental what ever changes in previous snap shot those only backup
+When you do snapshot it will take entire state of volumes[data,config,setting]
+snapshots are stored in s3
+for backups and DR we mainly keep take the snapshots
+
+In realtime we have 100GB ... 1000GB ... 1TB
+
+If take snapshot of encrypted volumes does it encrypted or not
+If you take non-encrypted volume how can you make encrypted
+
+AMI is a preconfigured template that has OS,settings,app
+By using template we can run as many instances we want it brings immutability
+If we want to move AMI to another region we need to first take snapshot then copy snapshot to another region
+
+instance store[temporary] = comes with ec2 instance when you restart ec2 instance
+
+Amazon Data lifecycle = automatic creation,retention copy and deletion of snapshots  and AMI's 
