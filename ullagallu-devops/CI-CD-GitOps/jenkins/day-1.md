@@ -1,4 +1,6 @@
-# Jenkins Installation
+# Jenkins Introduction
+
+# Jenkins Installation ControlPlane and BuildAgent Setup
 1. Jenkins is a java based web application so to run jenkins app we java runtime we were using amz3
 ```bash
 sudo yum install java-17-amazon-corretto-headless
