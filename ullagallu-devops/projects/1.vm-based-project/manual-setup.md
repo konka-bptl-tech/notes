@@ -43,27 +43,44 @@
 
         # Environment variables matching your Docker config
         Environment=DB_HOST="manual.konkas.tech"
+        
         Environment=DB_USER="crud"
+
         Environment=DB_PASSWORD="CrudApp@1"
+
         Environment=DB_NAME="crud_app"
+
         Environment=REDIS_HOST="redis.konkas.tech"
+
         Environment=REDIS_PORT="6379"
+
         Environment=REDIS_TLS="true"
+
         Environment=REDIS_INSECURE="true
 
         # If using absolute paths for Node and your app
+
         ExecStart=/usr/bin/node /app/server.js
 
+
         SyslogIdentifier=backend
+
         StandardOutput=syslog
+
         StandardError=syslog
 
         [Install]
+
         WantedBy=multi-user.target
+     
      - systemctl daemon-reload
+     
      - systemctl start backend
+     
      - systemctl enable backend
+     
      - systemctl status backend
+     
      - journalctl -u backend
 
 - Today I'm trying setup RDS and Elastic Cache and backend
