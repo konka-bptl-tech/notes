@@ -5,38 +5,6 @@
 4. **Containers share storage and network** – Can communicate via `localhost` and use shared volumes.
 5. **Pods don't auto-recover** – A Pod alone won’t restart itself if it fails (use Deployments for that).
 ---
-## 🧪 Pod Commands
-```bash
-# Create a pod
-kubectl run <pod-name> --image=nginx
-# Get list of pods
-kubectl get pods
-# Get pod details with node and IP info
-kubectl get pods -o wide
-# Describe a pod (deep inspection)
-kubectl describe pod <pod-name>
-# View pod logs
-kubectl logs <pod-name>
-# Access pod terminal
-kubectl exec -it <pod-name> -- bash
-# or if bash is not available
-kubectl exec -it <pod-name> -- sh
-```
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-pod
-  labels:
-    app: nginx
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-    ports:
-    - containerPort: 80
-```
----
 # 🔖 Labels & Selectors in Kubernetes
 1. **Labels** are `key=value` pairs attached to K8s objects (like Pods, Services, etc.).
 2. **Selectors** are used to **filter** and **connect** K8s objects based on labels.
@@ -62,33 +30,6 @@ selector:
       values: [frontend, backend]
 ```
 🔎 Matches Pods with `app=frontend` or `app=backend`.
----
-### ✅ **Assign (Add or Update) Labels**
-```bash
-kubectl label pod <pod-name> <key>=<value>
-```
-**Example:**
-```bash
-kubectl label pod nginx-pod environment=dev
-```
-* This adds the label `environment=dev` to the pod named `nginx-pod`.
-* If the label already exists, it will update the value.
----
-### ❌ **Remove (Unlabel) a Label**
-```bash
-kubectl label pod <pod-name> <key>-
-```
-**Example:**
-```bash
-kubectl label pod nginx-pod environment-
-```
-* This removes the `environment` label from the pod.
----
-### 🔍 To View Labels
-```bash
-kubectl get pod <pod-name> --show-labels
-```
-Here’s a **clean and structured version** of your notes on **ReplicaSet vs ReplicationController**, along with correct usage guidance:
 ---
 ## 📦 ReplicaSet vs ReplicationController in Kubernetes
 ### 🔄 Similarities:
