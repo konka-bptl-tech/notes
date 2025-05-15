@@ -34,6 +34,19 @@ spec:
 ```
 
 ```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+```
+
+```yaml
 # hpa
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -44,7 +57,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: nginx-deployment
-  minReplicas: 1
+  minReplicas: 2
   maxReplicas: 5
   metrics:
   - type: Resource
@@ -61,19 +74,20 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cpu-load-generator
+  name: nginx-load-generator
 spec:
   template:
     spec:
       containers:
       - name: loader
         image: busybox
-        command: ["sh", "-c", "while true; do :; done"]
-        resources:
-          requests:
-            cpu: "500m"
+        command:
+        - /bin/sh
+        - -c
+        - >
+          while true; do wget -q -O- http://nginx-service; done
       restartPolicy: Never
-  backoffLimit: 1
+
 ```
 
 
