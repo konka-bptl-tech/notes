@@ -91,3 +91,25 @@ kubectl exec -it <pod-name> -- bash or sh
 - It higher level controller that can handles rs rs maintains pods
 - It is easy handle applications rollouts and rollbackes
 - Imperative command to create deployment
+# Services
+In k8s each pod gets it's own IP address which is ephemeral means on every new creation of pod IP get changes so we cannot relay on Pod Ip for communication
+Service Object in k8s provides static IP It abstract layers for communication Which is not bound with Pod life cycle
+Service also also provides loadbalancing instead of accessing pod IPs service provides single entrypoint to access applications hosted in pod
+It enable accessbility inside and outside cluster
+What is service discover
+
+`ClusterIP` is a default serivce in k8s it exposes the application with in the cluster
+for example you have backend pod and frontend in order connect frontend pod to backendpod we no need to create expose our service outside world just create backend service which is cluster IP frontend pod can communicate via clusterIP
+to distribute traffic to pods service uses selector to identity target here endpointscontroller help us maintain stack of pods this stack is modified by controller when new pods/ or deletion of pods this controller update the stack
+
+`NodePort` this open one port in all avialable node in the cluster which so we can access our application via instanceip:nodeport
+exposing port is not ideal choice to expose application external traffic access in single static port 
+
+`LoadBalancer` LoadBalcner service does not require to open any port it just spin up cloud providers load balancer
+
+`ExternalName` TO access any CNAME records inside K8s cluster we were using ExternalName Service
+
+LoadBalancer externsion of NodePort
+NodePort extension of ClusterIP
+
+loadbalancer endpoint --> nodeip:nodeport --> clusterip:clusterport --> Podip:podport

@@ -26,10 +26,10 @@ spec:
           ports:
             - containerPort: 80
           resources:
-          requests:
-            cpu: "10m"
-          limits:
-            cpu: "50m"
+            requests:
+              cpu: "10m"
+            limits:
+              cpu: "50m"
 
 ```
 
@@ -87,7 +87,6 @@ spec:
         - >
           while true; do wget -q -O- http://nginx-service; done
       restartPolicy: Never
-
 ```
 
 
