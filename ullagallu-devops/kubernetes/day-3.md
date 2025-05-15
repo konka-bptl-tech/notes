@@ -1,4 +1,5 @@
 # 🚀 Kubernetes Deployment
+
 A **Deployment** is a high-level controller in Kubernetes used to manage application **rollouts**, **rollbacks**, and scaling in a declarative or imperative way.
 ---
 ### 🎯 Key Features of Deployment:
