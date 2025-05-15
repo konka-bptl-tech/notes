@@ -25,6 +25,12 @@ spec:
           image: nginx:latest
           ports:
             - containerPort: 80
+          resources:
+          requests:
+            cpu: "10m"
+          limits:
+            cpu: "50m"
+
 ```
 
 ```yaml
