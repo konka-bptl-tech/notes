@@ -76,6 +76,110 @@ git commit -m "Added new change to file.txt"
 * **`git pull`** – Fetches and merges changes from the remote repository into your current branch.
 * **`git push`** – Sends your local commits to the remote repository.
 ---
-# Branches
-# Merge,FastForwardMerge,Rebase,Cherry-Pick
+
+Great start, Konka! You've covered the key points well, but we can improve clarity, grammar, and technical accuracy slightly to make your explanation more polished for interviews or documentation.
+
+Here's your refined version:
+
+---
+
+### 🔹 Git Branches
+
+A **branch** is another line of development. It provides complete isolation from other branches, allowing developers to work independently without affecting each other’s work.
+
+```bash
+git branch feature/login        # Create a branch
+git checkout feature/login      # Switch to it
+git switch -c feature/login     # Create and switch in one step
+```
+
+---
+
+### 🔹 Merge
+
+Merging is the process of integrating changes from one branch into another.
+
+* `git merge` preserves the original commit history.
+* It creates a **new merge commit** when branches have diverged.
+
+---
+
+### 🔹 Rebase
+
+Rebase also integrates one branch into another, but with a key difference:
+
+* It **rewrites the commit history** by moving commits from one branch onto another, creating **new commit IDs**.
+* Rebase makes the commit history **clean and linear**.
+
+> ⚠️ Use rebase only on local or private branches — don’t rebase shared branches.
+---
+### 🔹 Fast-Forward Merge
+Fast-forward merge occurs when the target branch has no new commits since the source branch diverged. Git simply **moves the HEAD pointer forward** — no new merge commit is created.
+---
+### 🔹 Cherry-Pick
+
+Cherry-pick is used to **apply a specific commit** from one branch onto another.
+
+```bash
+git cherry-pick <commit-hash>
+```
+This is useful when you want to move **only one or a few commits**, not the entire branch.
+---
+### 🔹 Merge Conflicts
+Merge conflicts happen when **two developers change the same lines** in the same file. Git doesn’t know which change to keep.
+* Git marks the conflict in the file.
+* Developers must resolve it manually by **removing the conflicting lines**, keeping the correct code.
+* Once resolved:
+```bash
+git add <file>
+git commit
+```
+---
 # Git Stash
+Here’s a clear and concise explanation of **Git Stash** you can use in interviews or notes:
+
+---
+
+### 🔹 Git Stash
+
+**Git stash** is used to temporarily save uncommitted changes (both staged and unstaged) in a clean state, so you can switch branches or work on something else without losing your work.
+
+It’s like putting your work on hold.
+
+#### ✅ Common Use Cases:
+
+* You're in the middle of working on something, and suddenly need to switch to a different branch.
+* You don’t want to commit unfinished changes just to switch branches.
+
+---
+
+### 🧪 Example
+
+```bash
+git stash           # Save current changes
+git stash list      # View all stashes
+git stash pop       # Apply the most recent stash and remove it from stash list
+git stash apply     # Apply most recent stash but keep it in the stash list
+git stash drop      # Delete the most recent stash
+git stash clear     # Remove all stashed changes
+```
+
+---
+
+### 💡 Notes:
+
+* You can stash multiple times; each stash is saved in a stack-like structure.
+* You can name a stash for easier reference:
+
+```bash
+git stash save "WIP: fixing login bug"
+```
+
+* To apply a specific stash:
+
+```bash
+git stash apply stash@{1}
+```
+
+---
+
