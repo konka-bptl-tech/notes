@@ -1,17 +1,18 @@
 # Docker
 ### Day-1
-- What is Docker and Why
-- What is Containerization and container
-- Mutability & Immutability
-- Docker Architecture
+- Compute evolution
+  - physical,virtual machines,containers
+  - difference between virtual machines and containers
+  - Benefits of containers
+- What is docker
+- Docker Atchitecture
 - Docker Basic Commands
 - Container LifeCycle
-- Namespaces and cGroups
 ### Day-2
-- Dockerfile instructions
-- Project Dockerization
-- Docker volumes
-- Docker Netwroking
+- What is Docker Image and AMI
+- Dockerfile and instructions
+- Docker Layers and Best practices
+
 ### Day-3
 - Docker Compose[create the project using docker compose]
 - Docker Best practices
