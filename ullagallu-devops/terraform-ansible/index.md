@@ -9,6 +9,7 @@
 ### Day-2
 - Ec2 instance creation
 - loops[count,for_each]
+- condtion[ condition ? True : False ]
 - provisioners[file,local-exec,remote-exec]
 - locals
 - terraform commands[init,fmt,validate,plan,apply,destroy]
@@ -22,5 +23,6 @@
 ### Day-5
 - Worksapces
 - taint,import,untaint,replace
-
+### Day-6
+- Project Overview[3-tier infra discussion]
 # Ansible
