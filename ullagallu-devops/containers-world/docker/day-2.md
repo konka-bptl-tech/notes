@@ -136,5 +136,115 @@ Docker layers are **intermediate read-only filesystems** created by each instruc
 This layer-based caching mechanism is key to **efficient, fast, and repeatable Docker builds.**
 
 ---
+Here’s a clean and interview-friendly explanation of **multi-stage Docker builds**, based on your input and expanded with clarity:
+
+---
+
+### 🔹 How to Explain Multi-Stage Docker Builds in an Interview
+
+You can start like this:
+
+> In Docker, **multi-stage builds** are used to **reduce the final image size** and **separate build-time dependencies from runtime requirements**.
+>
+> For example, in Java-based applications, we use Maven to build the code, but we **don’t need Maven in the final image**, we only need the built artifact (like a `.jar` file).
+>
+> So, with multi-stage builds, we use one image (like `maven`) in the first stage to compile the code, and then copy the output to a second stage, which uses a lightweight runtime image like `openjdk` to run the app.
+
+---
+
+### 🔹 Sample Multi-Stage Dockerfile (Java Example)
+
+```Dockerfile
+# Stage 1: Build
+FROM maven:3.8.6-openjdk-17 as builder
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Stage 2: Runtime
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/myapp.jar app.jar
+CMD ["java", "-jar", "app.jar"]
+```
+
+---
+
+### 🔹 Benefits of Multi-Stage Builds
+
+* **Minimized Image Size** – No need to keep build tools like Maven, Node.js, etc. in final image
+* **Improved Security** – Smaller attack surface
+* **Better Performance** – Lighter images are faster to pull, start, and deploy
+* **Cleaner Separation** – Build and run environments are decoupled
+
+---
+### 🔹 What are Dangling Images?
+
+Dangling images are **unused Docker image layers** that have:
+
+* **No tag**
+* Are **not referenced by any container**
+
+These usually appear when you rebuild images — old intermediate layers become unused.
+
+**Command to list:**
+
+```bash
+docker images -f dangling=true
+```
+
+---
+
+### 🔹 `docker system prune`
+
+Removes **all**:
+
+* Stopped containers
+* Unused networks
+* Dangling images
+* Build cache
+
+**Command:**
+
+```bash
+docker system prune
+```
+
+You’ll be prompted to confirm before deletion.
+
+---
+
+### 🔹 `docker system prune -a`
+
+Does everything `docker system prune` does, **plus:**
+
+* Removes **all unused images**, not just dangling ones.
+
+**Command:**
+
+```bash
+docker system prune -a
+```
+
+⚠️ Use with caution — it can delete images that are not currently used by containers but might still be needed.
+
+---
+
+### 🔹 `docker system df`
+
+Shows Docker disk usage stats:
+
+* Images
+* Containers
+* Volumes
+* Build cache
+
+**Command:**
+
+```bash
+docker system df
+```
+Helps analyze space usage before pruning.
+---
 
 
