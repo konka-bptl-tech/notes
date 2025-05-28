@@ -1,4 +1,3 @@
-# Kubernetes
 # Day-1
 - Introdcution[What is k8s Why k8s]
 - k8s Architecture 
@@ -77,22 +76,24 @@
 # Day-16
 - EKS setup with Terraform
 # Day-17
-- Monitoring K8s Cluster With Prometheus and Grafana
+- EKS setup with Terraform
 # Day-18
+- Karpenter
+# Day-19
+- Kyverno
+# Day-20
+- ArGoCD
+# Day-21
+- Pod Security
+- Pod Security Admission (PSA)
+# Day-22
+- Monitoring K8s Cluster With Prometheus and Grafana
+# Day-23
 - Daemonset
 - hostPath
 - FileBeats to collect Logs and push to LogStash
-# Day-19
+# Day-24
 - Istio[Tracing]
-# Day-20
-- Pod Security
-- Pod Security Admission (PSA)
-# Day-21
+# Day-25
 - Backup cluster and Restore using velero
 - Cluster Upgradation
-# Day-22
-- Karpenter
-# Day-23
-- Kyverno
-# Day-24
-- ArGoCD

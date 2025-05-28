@@ -28,7 +28,7 @@
 # K8s Features
 - refer official documentation
 ---
-## 🌐 Kubernetes (K8s) Architecture – Beautiful Notes
+## 🌐 Kubernetes (K8s) Architecture
 Kubernetes is a **powerful container orchestration platform** designed to manage distributed systems across a cluster of machines. The architecture consists of:
 * **Master Nodes** – Control and manage the cluster.
 * **Worker Nodes** – Run the application workloads.
