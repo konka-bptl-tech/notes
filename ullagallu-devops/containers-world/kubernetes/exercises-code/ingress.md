@@ -1,8 +1,11 @@
+## Namespace Creation
+```bash
 kubectl create namespace blue
 kubectl create namespace red
-
-blue-deployment.yaml
-
+````
+---
+## blue-deployment.yaml
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,10 +40,10 @@ spec:
   ports:
   - port: 80
     targetPort: 5678
-
-
-red-deployment.yaml
-
+```
+---
+## red-deployment.yaml
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -75,10 +78,10 @@ spec:
   ports:
   - port: 80
     targetPort: 5678
-
-
-blue-ingress.yaml
-
+```
+---
+## blue-ingress.yaml
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -90,7 +93,7 @@ metadata:
     alb.ingress.kubernetes.io/group.name: "blue-red"
     alb.ingress.kubernetes.io/scheme: "internet-facing"
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/tags: '[{"Key":"Environment","Value":"Dev"},{"Key":"Team","Value":"test"}]'
+    alb.ingress.kubernetes.io/tags: "Environment=Dev,Team=test"
     alb.ingress.kubernetes.io/group.order: '10'
     alb.ingress.kubernetes.io/healthcheck-path: '/'
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
@@ -106,7 +109,6 @@ spec:
     - host: "blue.konkas.tech"
       http:
         paths:
-          # HTTPS redirect rule
           - path: "/*"
             pathType: ImplementationSpecific
             backend:
@@ -114,8 +116,6 @@ spec:
                 name: ssl-redirect
                 port:
                   name: use-annotation
-
-          # Actual service route
           - path: "/"
             pathType: Prefix
             backend:
@@ -123,25 +123,54 @@ spec:
                 name: blue-service
                 port:
                   number: 80
-
-
-red-ingress.yaml
+```
+---
+## red-ingress.yaml
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: red-ingress
-  namespace: red
+  labels:
+    app: red-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    alb.ingress.kubernetes.io/load-balancer-name: "ullagallu"
+    alb.ingress.kubernetes.io/group.name: "blue-red"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/tags: "Environment=Dev,Team=test"
+    alb.ingress.kubernetes.io/group.order: '10'
+    alb.ingress.kubernetes.io/healthcheck-path: '/'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-east-1:522814728660:certificate/430d56f7-f634-4023-ae90-3ef6b063ab55"
+    alb.ingress.kubernetes.io/ssl-policy: 'ELBSecurityPolicy-2016-08'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: >
+      {"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301" }}
+    external-dns.alpha.kubernetes.io/hostname: "red.konkas.tech"
+    external-dns.alpha.kubernetes.io/ttl: '60'
 spec:
+  ingressClassName: alb
   rules:
-  - host: YOUR_DOMAIN_OR_LB
-    http:
-      paths:
-      - path: /red
-        pathType: Prefix
-        backend:
-          service:
-            name: red-service
-            port:
-              number: 80
+    - host: "red.konkas.tech"
+      http:
+        paths:
+          - path: "/*"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ssl-redirect
+                port:
+                  name: use-annotation
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: red-service
+                port:
+                  number: 80
+```
+---
+## Optional: Remove Ingress Finalizers (for cleanup)
+```bash
+kubectl patch ingress blue-ingress -p '{"metadata":{"finalizers":[]}}' --type=merge
+```
