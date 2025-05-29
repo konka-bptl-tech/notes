@@ -9,8 +9,6 @@
         amount INT NOT NULL,
         description VARCHAR(255) NOT NULL
       );
-
-
       CREATE USER IF NOT EXISTS 'crud'@'%' IDENTIFIED BY 'CrudApp@1';
       GRANT ALL ON crud_app.* TO 'crud'@'%';
       FLUSH PRIVILEGES;
@@ -28,7 +26,6 @@
       sudo yum -y install packer
     - create folder backend and create backend.sh
       #!/bin/bash
-
       # Variables
       USERID=$(id -u) # User id
       TIMESTAMP=$(date +%F-%H-%M-%S)
@@ -230,11 +227,7 @@ systemctl daemon-reload
 systemctl enable backend
 systemctl start backend
 8. Luanch ASG with above template and also ALB
-
-
-
-
-
+9. Create IAM role with below policy
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -248,10 +241,16 @@ systemctl start backend
     }
   ]
 }
-# Example: download nginx.conf to /etc/nginx/nginx.conf
-aws s3 cp s3://your-bucket-name/path/to/nginx.conf /etc/nginx/nginx.conf
+10. Create Luanch template with frontend-ami choose key and in assign instance profile above create role and enter user data
+#!/bin/bash
+aws s3 cp s3://vm-s3-nginx-conf/nginx.conf /etc/nginx/nginx.conf
 systemctl restart nginx
 
+11. Check the entries in redis
+    redis6-cli -h test-redis.konkas.tech -p 6379 --tls --insecure GET "all_entries" | jq .
+12. create certificate frontend-vm.konkas.tech same as upload to Route53
+13. create cloud front 
+    create distribution --> choose origin frontend-vm.konkas.tech --> Alternative Name frontend-vm.konkas.tech --> certificate choose frontend-vm.konkas.tech
 
 
 
