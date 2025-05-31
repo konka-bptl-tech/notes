@@ -158,7 +158,7 @@ aws ecs update-service \
      npm -v
      git clone https://github.com/sivaramakrishna-konka/3-tier-vm-frontend.git
      npm install
-     VITE_API_URL=https://backend-ecs.konkas.tech npm run build
+     VITE_API_URL=https://backend-ecs.konkas.tech/api/ npm run build
      cd dist
      grep -r "https://backend.ecs.konkas.tech" .
 14. Create s3 bucket
@@ -197,6 +197,25 @@ aws ecs update-service \
         ]
       }
 16. Goto s3 bucket apply s3 bucket on it
+
+# Delete Service
+aws ecs delete-service \
+  --cluster example \
+  --service backend \
+  --force
+
+# Deregister TD
+aws ecs list-task-definitions \
+    --status ACTIVE \
+    --query 'taskDefinitionArns' \
+    --output text \
+  | tr '\t' '\n' \
+  | grep -v '^$' \
+  | xargs -n1 aws ecs deregister-task-definition --task-definition
+
+
+
+-  
 
 
 
@@ -489,17 +508,3 @@ S3 → API Gateway → VPC Link → ECS Backend
 
 
 
-# Delete Service
-aws ecs delete-service \
-  --cluster example \
-  --service backend \
-  --force
-
-# Deregister TD
-aws ecs list-task-definitions \
-    --status ACTIVE \
-    --query 'taskDefinitionArns' \
-    --output text \
-  | tr '\t' '\n' \
-  | grep -v '^$' \
-  | xargs -n1 aws ecs deregister-task-definition --task-definition
