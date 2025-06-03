@@ -49,9 +49,8 @@
   * Google Cloud Storage
 
 > Think of it like a bucket that can store any type of file and you access it using URLs or APIs.
-
-Great addition, Konka! Here's an **enhanced comparison table** with **IOPS**, **Throughput**, and **Latency**—these metrics help you understand performance characteristics across storage types and cloud providers.
-
+---
+### ⚡ Summary Table:
 ---
 
 | Storage Type   | Structure        | Access Method        | Best For                       | AWS Example | Azure Example      | GCP Example         | IOPS                                  | Throughput                     | Latency               |
@@ -113,14 +112,4 @@ Great addition, Konka! Here's an **enhanced comparison table** with **IOPS**, **
 | **Throughput** | How much data is transferred/sec   | MBps or GBps      | Large file transfers        |
 | **Latency**    | Delay between request and response | Milliseconds (ms) | Responsiveness/speed        |
 
----
-### ⚡ Summary Table:
----
-
-| Storage Type   | Structure        | Access Method        | Best For                       | AWS Example | Azure Example          | GCP Example             |
-| -------------- | ---------------- | -------------------- | ------------------------------ | ----------- | ---------------------- | ----------------------- |
-| Block Storage  | Raw Blocks       | Mounted as disk      | Databases, VMs, OS disks       | **EBS**     | **Azure Disk Storage** | **Persistent Disk**     |
-| File Storage   | Folder/File Tree | Shared network drive | Shared access, CMS, user data  | **EFS**     | **Azure Files**        | **Filestore**           |
-| Object Storage | Flat (Objects)   | API / URL based      | Backups, media, logs, big data | **S3**      | **Azure Blob Storage** | **Cloud Storage (GCS)** |
----
 
