@@ -113,3 +113,6 @@
 | **Latency**    | Delay between request and response | Milliseconds (ms) | Responsiveness/speed        |
 
 
+
+# Durability in s3
+# High availability in S3
