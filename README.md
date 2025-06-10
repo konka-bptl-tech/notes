@@ -10,6 +10,7 @@
 8. MySQL
 9. Redis
 10. RabbitMQ
+11. Git & GitHub
 
 # Linux & Bash Scripting
 - Introdcution

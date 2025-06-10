@@ -21,11 +21,11 @@
 - Docker Best practices
 - Limitations With Docker to run containers
 ### Day-5
-- ECS and it's components
-- Project
+- Expense project dockerization and testing
+- Exercise Instana Project dockerization and testing 
 ### Day-6
-- Complete ECS project
+- ECS and it's components
+- Expense Project Setup on ECS[AWS-CLI]
+- Exercise Instana Project Setup on ECS
 ### Day-7
-- Server Project with ECS
-### Day-8
 - Why would go for K8s[EKS] over ECS

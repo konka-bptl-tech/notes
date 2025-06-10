@@ -158,7 +158,7 @@ Docker is a **containerization platform** that allows you to package an applicat
 
 ### 🔸 Docker Architecture
 
-**"Docker follows a client-server architecture. It mainly consists of the Docker client, Docker daemon, Docker images, containers, and registries. Let me explain each component clearly."**
+**"Docker follows a client-server architecture. It mainly consists of the Docker client, Docker daemon, Docker images, containers, and registries."**
 
 ---
 

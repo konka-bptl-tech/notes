@@ -60,6 +60,155 @@ Key instructions include:
 
 Docker builds the image layer by layer, where each instruction creates a new image layer. This layering allows Docker to cache steps and speed up subsequent builds if the instructions or files don’t change.
 
+In Docker, `CMD` and `ENTRYPOINT` are both instructions used in a `Dockerfile` to define what command gets executed when a container starts. However, they serve different purposes and behave differently, especially when you run containers with custom commands.
+
+Here’s a breakdown of the **differences** between `CMD` and `ENTRYPOINT`:
+
+---
+
+### 🧱 **Purpose**
+
+| Instruction  | Purpose                                                                        |
+| ------------ | ------------------------------------------------------------------------------ |
+| `CMD`        | Provides **default arguments** for the container when no command is specified. |
+| `ENTRYPOINT` | Sets the **main command** to run when the container starts.                    |
+
+---
+
+### ⚙️ **Overriding Behavior**
+
+| Instruction  | Overridden by arguments passed to `docker run`?                          |
+| ------------ | ------------------------------------------------------------------------ |
+| `CMD`        | ✅ Yes, completely replaced by command-line arguments.                    |
+| `ENTRYPOINT` | ❌ No, unless you use `--entrypoint` flag. Arguments passed are appended. |
+
+---
+
+### 📦 **Examples**
+
+#### Example 1: Using `CMD`
+
+```Dockerfile
+FROM ubuntu
+CMD ["echo", "Hello from CMD"]
+```
+
+Running:
+
+```bash
+docker run myimage
+```
+
+Output:
+
+```
+Hello from CMD
+```
+
+Running:
+
+```bash
+docker run myimage echo "Overridden"
+```
+
+Output:
+
+```
+Overridden
+```
+
+✅ *CMD is overridden.*
+
+---
+
+#### Example 2: Using `ENTRYPOINT`
+
+```Dockerfile
+FROM ubuntu
+ENTRYPOINT ["echo"]
+```
+
+Running:
+
+```bash
+docker run myimage "Hello from ENTRYPOINT"
+```
+
+Output:
+
+```
+Hello from ENTRYPOINT
+```
+
+Running:
+
+```bash
+docker run myimage "Something else"
+```
+
+Output:
+
+```
+Something else
+```
+
+But:
+
+```bash
+docker run --entrypoint /bin/bash myimage
+```
+
+✔️ Overrides the ENTRYPOINT
+
+---
+
+### 🤝 Using Both Together
+
+You can use them **together** to create flexible containers:
+
+```Dockerfile
+FROM ubuntu
+ENTRYPOINT ["echo"]
+CMD ["Hello from CMD"]
+```
+
+Running:
+
+```bash
+docker run myimage
+```
+
+Output:
+
+```
+Hello from CMD
+```
+
+Running:
+
+```bash
+docker run myimage "Custom Message"
+```
+
+Output:
+
+```
+Custom Message
+```
+
+Here, `ENTRYPOINT` is fixed (`echo`), but `CMD` provides default arguments, which you can override.
+
+---
+
+### 🔑 Summary
+
+| Feature                             | `CMD`                      | `ENTRYPOINT`                      |
+| ----------------------------------- | -------------------------- | --------------------------------- |
+| Defines                             | Default command or args    | Main executable                   |
+| Can be overridden with `docker run` | ✅ Yes                      | ❌ Only with `--entrypoint`        |
+| Can be used with arguments          | ✅ Yes (as array or string) | ✅ Yes (best as array form)        |
+| Typical use                         | Provide default args       | Run a fixed application or script |
+
 ---
 
 In short, the Dockerfile provides a **declarative blueprint** that Docker uses to assemble a consistent, repeatable image that can be shared and deployed anywhere.

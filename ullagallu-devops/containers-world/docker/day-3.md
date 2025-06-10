@@ -55,8 +55,6 @@ docker run -d -v /home/konka/code:/usr/src/app --name dev-app node
 ```
 
 This mounts the host path `/home/konka/code` into the container at `/usr/src/app`.
----
-Here's a clear and technical explanation in your preferred format:
 
 ---
 
