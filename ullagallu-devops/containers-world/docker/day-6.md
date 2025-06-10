@@ -1,5 +1,55 @@
 
-## 🧱 Amazon ECS – Final Notes
+---
+
+Absolutely, here's an updated explanation including **"Docker is a single point of failure"** — ideal for interview usage:
+
+---
+
+### 🔹 Limitations of Docker (Standalone)
+
+> Docker is excellent for building and running containers, but it has several limitations when used **alone** in a production environment:
+
+#### 1. ❌ **Single Point of Failure**
+
+* Docker Engine runs on a single host.
+* If that host fails, **all running containers are lost**, and there's no built-in failover or recovery.
+* This makes Docker a **single point of failure** in production setups.
+
+#### 2. ❌ **No High Availability (HA)**
+
+* No clustering or automatic distribution of containers across multiple nodes.
+* You need external orchestration to achieve fault tolerance and uptime.
+
+#### 3. ❌ **No Scalability**
+
+* Docker cannot scale containers horizontally across hosts.
+* There's no native service discovery or load balancing for multiple instances.
+
+#### 4. ❌ **No Self-Healing**
+
+* Docker has basic restart policies (`--restart=always`), but:
+
+  * It cannot **monitor application health**
+  * It cannot **reschedule containers** to healthy nodes
+
+---
+
+### 🔹 Tools That Solve These Issues
+
+> To address these gaps, we use container orchestration platforms like:
+
+* **Kubernetes**
+* **Docker Swarm**
+* **AWS ECS/Fargate**
+
+These provide:
+
+* Multi-node clusters
+* High availability
+* Auto-scaling
+* Self-healing
+* Rolling updates and zero-downtime deployments
+---
 
 ### ✅ What is ECS?
 

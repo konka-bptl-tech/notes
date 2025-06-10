@@ -19,10 +19,10 @@
 ### Day-4
 - Docker Compose[create the project using docker compose]
 - Docker Best practices
-- Limitations With Docker to run containers
 ### Day-5
 - Expense project dockerization and testing
 - Exercise Instana Project dockerization and testing 
+- Limitations With Docker to run containers
 ### Day-6
 - ECS and it's components
 - Expense Project Setup on ECS[AWS-CLI]
