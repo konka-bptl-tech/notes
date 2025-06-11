@@ -1,0 +1,25 @@
+# Why we using services in k8s?
+
+In Kubernetes, we use **services** mainly because **pods are ephemeral**—their IP addresses keep changing whenever a pod restarts, scales, or gets recreated due to configuration changes. Since pod IPs are not stable, we cannot rely on them for internal communication. To solve this, Kubernetes provides a **Service** resource, which offers a **stable IP or DNS name** to access a group of pods. Services work independently of pod lifecycles and use **labels and selectors** to automatically identify and route traffic to the correct pods. Behind the scenes, the **EndpointSlice controller** keeps track of all healthy pod IPs—adding new ones and removing deleted ones.
+
+The two main features of Kubernetes services are **service discovery** and **load balancing**. Service discovery allows other components to access services using DNS names instead of IPs. Load balancing helps distribute traffic evenly across all available pods. Kubernetes supports different types of services like **ClusterIP**, **NodePort**, **LoadBalancer**, and **ExternalName**. ClusterIP is the default type and exposes services only within the cluster. NodePort exposes a service externally using a fixed port on each node but is less secure and rarely used in production. LoadBalancer is used in cloud environments to expose services externally through a cloud provider's load balancer. ExternalName maps a Kubernetes service to an external DNS name (CNAME), allowing access to external services from inside the cluster.
+
+When a LoadBalancer service is created, Kubernetes also sets up a NodePort and ClusterIP behind it. Similarly, creating a NodePort service also creates a ClusterIP. The internal access flow for a LoadBalancer service is: LoadBalancer IP → NodeIP\:NodePort → ClusterIP\:ClusterPort → PodIP\:Port. This layered routing ensures stability and flexibility in accessing applications within and outside the cluster.
+
+# What is Ingress?
+
+In Kubernetes, when we want to expose applications to external users, we often use **LoadBalancer** services. However, this becomes costly when we have **multiple applications** in the same cluster. For example, if I have three multi-tenant applications like `expense.konkas.tech`, `instance.konkas.tech`, and `grafana.konkas.tech`, using a separate LoadBalancer for each service means creating **three individual cloud load balancers**, which increases the cost significantly.
+
+To solve this, Kubernetes provides a more efficient solution called **Ingress**. Ingress allows us to use a **single LoadBalancer** to expose **multiple services** to the internet, using **host-based or path-based routing**. This is possible because **Ingress works at Layer 7 (application layer)** of the OSI model. Cloud load balancers like AWS ALB (Application Load Balancer) support these advanced Layer 7 features.
+
+To make this work, we need two main components: the **Ingress Controller** and the **Ingress Resource**.
+
+* The **Ingress Controller** is a pod running inside the cluster. It watches for **Ingress Resources** and handles incoming HTTP/HTTPS traffic.
+* The **Ingress Resource** is a Kubernetes object where we define **rules**, such as:
+
+  * Route traffic to `expense.konkas.tech` → forward to `expense-service`
+  * Route traffic to `instance.konkas.tech` → forward to `instance-service`
+  * Route traffic to `grafana.konkas.tech` → forward to `grafana-service`
+
+The Ingress Controller reads these rules and configures its internal routing logic accordingly. So when a request comes in to the LoadBalancer (e.g., `grafana.konkas.tech`), the Ingress Controller matches it with the right rule and forwards the traffic to the correct backend service inside the cluster. This setup saves cost by using a **single external LoadBalancer** for multiple services and also adds flexibility by allowing **host-based and path-based routing**.
+---
