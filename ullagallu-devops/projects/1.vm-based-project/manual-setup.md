@@ -12,8 +12,10 @@
       CREATE USER IF NOT EXISTS 'crud'@'%' IDENTIFIED BY 'CrudApp@1';
       GRANT ALL ON crud_app.* TO 'crud'@'%';
       FLUSH PRIVILEGES;
+
 2. Luanch Elastic Cache Redis OSS
    - Create Route53 Record
+   
 3. Just Launch Ec2 instance install sudo dnf install redis6
    - Checking connection telnet <dns-name> <port> to comeout from telnet  press ctrl + ] then enter quit
    - Checking the connection redis6-cli -h <dns-name> -p <port> --tls --insecure
