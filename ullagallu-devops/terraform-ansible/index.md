@@ -1,28 +1,37 @@
 # Terraform
-### Day-1
-- What is Infrastructure Problems with provisioning manually
-- What is IaC and it's benefits
-- What is Terraform
+-  Manual Provision,Iac and Terraform
 - Terraform Blocks
   - terraform settings block,provider,resource,outputs,variables,null_resource,data block
-- variable types[string,list,map,bool]
-### Day-2
+- variable types[string,list,map,bool,object...]
+- Sensitive variables and outputs
+
+- terraform commands init,fmt,validate,plan,apply,destroy,show
 - Ec2 instance creation
-- loops[count,for_each]
+- loops[count,for_each,for]
 - condtion[ condition ? True : False ]
 - provisioners[file,local-exec,remote-exec]
 - locals
-- terraform commands[init,fmt,validate,plan,apply,destroy]
-### Day-3
+
 - statefile
 - local state and remote state
+- Versioning and recovery of state files
 - locking
-### Day-4
+- tfsec
+
 - Modules
 - Functions
-### Day-5
+
 - Worksapces
 - taint,import,untaint,replace
-### Day-6
-- Project Overview[3-tier infra discussion]
+
+- Terraform Cloud
+
+- Terragrunt
+
+- Multi-account/multi-region architecture
+
+- tflint, tfsec, checkov for security/compliance
+
+
+
 # Ansible
