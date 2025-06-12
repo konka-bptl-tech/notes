@@ -12,3 +12,22 @@ Grafana mimir
 
 maintainning static configuration is very difficult
 so configure dynamic configuration
+
+black box monitoring = end users can test the application
+white box monitoring = cpu,ram,memory, no of requests, latency=time to respond to our request
+
+up
+node_memory_MemAvailable_bytes / 1024
+ - job_name: 'ec2-instances'
+    ec2_sd_configs:
+      - region: us-east-1
+        filters:
+          - name: "tag:Monitoring"
+            values: ["true"]
+
+
+1860
+
+APM monitoring
+
+How can i manage my own repos instead of donwloading from public repos

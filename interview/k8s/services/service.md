@@ -6,5 +6,5 @@ The two main features of Kubernetes services are **service discovery** and **loa
 
 When a LoadBalancer service is created, Kubernetes also sets up a NodePort and ClusterIP behind it. Similarly, creating a NodePort service also creates a ClusterIP. The internal access flow for a LoadBalancer service is: LoadBalancer IP → NodeIP\:NodePort → ClusterIP\:ClusterPort → PodIP\:Port. This layered routing ensures stability and flexibility in accessing applications within and outside the cluster.
 
-
+# EKS IP Exhaustion[https://www.youtube.com/watch?v=ICgj71wmN6E]
 
