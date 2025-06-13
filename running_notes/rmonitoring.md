@@ -31,3 +31,27 @@ node_memory_MemAvailable_bytes / 1024
 APM monitoring
 
 How can i manage my own repos instead of donwloading from public repos
+
+for APM we are using Jaegar open source edition for enterprise newrelic
+
+100 - avg by (instance,name) (rate(node_cpu_seconds_total{node="idle"})[5m]) * 100
+
+100 - (node_memory_MemFree_bytes / node_memory_MemTotal_bytes) * 100
+
+100 - (node_filesystems_avail_bytes{mountpoint="/"}  * 100 / node_filesystems_size_bytes{mountpoint="/"})
+
+sum by (instance,name) (rate(node_network_receive_bytes_total[1m])) + sum by (instance,name) (irate(node_network_transmit_bytes_total[1m]))
+
+4 Golden Rules
+1. Latency
+2. Errors
+3. Traffic
+ - can be done via ELK
+4. Saturation[Prometheus]
+
+EL/FK
+Elastic Search = Repo which store logs
+Kibana = visualization tool for Elastic Search
+Logstash = filtering the logs before storing into elasticsearch
+FluentBit = Light weight log collector
+
