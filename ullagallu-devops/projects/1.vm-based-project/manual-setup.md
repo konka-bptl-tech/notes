@@ -505,11 +505,12 @@ Our developers make sure api response should be 15 ms latency application archit
 wget  wget https://github.com/prometheus/prometheus/releases/download/v2.53.4/prometheus-2.53.4.linux-amd64.tar.gz
 tar -xvzf prometheus-2.53.4.linux-amd64.tar.gz
 mv prometheus-2.53.4.linux-amd64 prometheus
+rm -rf prometheus-2.53.4.linux-amd64.tar.gz
 ```
 2. Create Service file
 
 ```bash   
-mkdir -p /home/ec2-user/prometheus/data --> storage for prometheus
+mkdir -p /home/ec2-user/prometheus/data
 ```
 ```bash
 sudo nano /etc/systemd/system/prometheus.service
@@ -535,7 +536,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 ```bash
-sudo systemctl daemon-reexec[refreshes prometheus service]
+sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
