@@ -25,14 +25,14 @@ FLUSH PRIVILEGES;
    - Checking the connection redis6-cli -h <dns-name> -p <port> --tls --insecure
 
 4. Prepare AMI wihtout service file
-- Go to aws shell install packer
+- Go to aws shell install packer using below commands
 ```bash
 #!/bin/bash
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
 sudo yum -y install packer
 ```
-- create folder backend and create backend.sh
+5. create folder backend and create backend.sh
 
 ```bash
 #!/bin/bash
@@ -165,10 +165,32 @@ build {
 }
 ```
 
+- Create AMI
+
+```bash
+cd backend
+packer init .
+packer fmt .
+packer validate .
+packer build .
+```
+
 5. Create secrets in secrets manager and non sensitive data in parameter store
-   - aws secrets manager --> store a new secret --> other type of secret[enter key value pairs] --> secretname --> review and enter
-   
-   - go to parameter store enter all non-sensitive data in secure string type
+- aws secrets manager --> store a new secret --> other type of secret[enter key value pairs] --> secretname --> review and enter
+```json
+{
+  "DB_USER": "crud",
+  "DB_PASSWORD": "CrudApp@1"
+}
+```
+- enter the path like <environment>/<project_name>/<credentials_name> test/curd/db_crentials
+
+- go to parameter store enter all non-sensitive data in secure string type
+```bash
+/test/crud/DB_HOST[name]=test-db.konkas.tech[value]
+/test/crud/DB_NAME[name]=crud_app[value]
+/test/crud/REDIS_HOST[name]=test-redis.konkas.tech[value]
+```
 6. Create IAM policy to get secrets and paramter strore
 
 ```json
@@ -198,7 +220,7 @@ build {
   }
 ```
 
-- create iam role backend crednetials
+- create iam role backend crednetials and ssm parameter and attach above policy
 
 7. Create Luanch template with backend-ami choose key and in assign instance profile above create role and enter user data
 
@@ -222,7 +244,6 @@ DB_PASSWORD=$(echo "$SECRETS" | jq -r .DB_PASSWORD)
 DB_HOST=$(aws ssm get-parameter --name "/crud/config/DB_HOST" --with-decryption --query "Parameter.Value" --output text)
 DB_NAME=$(aws ssm get-parameter --name "/crud/config/DB_NAME" --with-decryption --query "Parameter.Value" --output text)
 REDIS_HOST=$(aws ssm get-parameter --name "/crud/config/REDIS_HOST" --with-decryption --query "Parameter.Value" --output text)
-REDIS_PORT=$(aws ssm get-parameter --name "/crud/config/REDIS_PORT" --with-decryption --query "Parameter.Value" --output text)
 
 # Generate systemd service file
 cat <<EOF > $SERVICE_FILE
@@ -236,7 +257,6 @@ Environment="DB_USER=${DB_USER}"
 Environment="DB_PASSWORD=${DB_PASSWORD}"
 Environment="DB_NAME=${DB_NAME}"
 Environment="REDIS_HOST=${REDIS_HOST}"
-Environment="REDIS_PORT=${REDIS_PORT}"
 ExecStart=/usr/bin/node ${APP_DIR}/server.js
 SyslogIdentifier=backend
 Restart=always
@@ -250,10 +270,189 @@ systemctl daemon-reload
 systemctl enable backend
 systemctl start backend
 ```
+8. Luanch ASG with above template
+9. create target group and launch alb
+10. create route 53 record for ALB DNS
 
-8. Luanch ASG with above template and also ALB
+11. Create folder frontend and inside create
+- frontend.sh
+```bash
+#!/bin/bash
 
-9. Create IAM role with below policy
+USERID=$(id -u)
+TIMESTAMP=$(date +%F-%H-%M-%S)
+SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
+LOG_FILE="/tmp/${TIMESTAMP}-${SCRIPT_NAME}.log"
+
+# Colors
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"
+
+echo "Started at: $TIMESTAMP"
+echo "Log: $LOG_FILE"
+
+LOG() {
+    local MESSAGE="$1"
+    local STATUS="$2"
+    if [ "$STATUS" -eq 0 ]; then
+        echo -e "$MESSAGE ..... ${G}Success${N}" | tee -a "$LOG_FILE"
+    else
+        echo -e "$MESSAGE ..... ${R}Failed${N}" | tee -a "$LOG_FILE"
+        exit 1
+    fi
+}
+
+# Check root
+if [ "$USERID" -ne 0 ]; then
+    echo -e "${R}Run with sudo/root${N}" | tee -a "$LOG_FILE"
+    exit 1
+fi
+
+echo -e "${G}Starting frontend setup...${N}" | tee -a "$LOG_FILE"
+
+# Install Node.js and Nginx
+dnf install -y nginx git &>>"$LOG_FILE"
+LOG "Installing Nginx and Git" $?
+
+curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - &>>"$LOG_FILE"
+dnf install -y nodejs &>>"$LOG_FILE"
+LOG "Installing Node.js" $?
+
+# Enable and start Nginx
+systemctl enable nginx &>>"$LOG_FILE"
+LOG "Enabling Nginx" $?
+systemctl start nginx &>>"$LOG_FILE"
+LOG "Starting Nginx" $?
+
+# Clear existing html
+rm -rf /usr/share/nginx/html/* &>>"$LOG_FILE"
+LOG "Clearing Nginx HTML folder" $?
+
+# Clone and build frontend
+cd /tmp
+git clone https://github.com/sivaramakrishna-konka/3-tier-vm-frontend.git frontend-app &>>"$LOG_FILE"
+LOG "Cloning frontend repo" $?
+
+cd frontend-app
+npm install &>>"$LOG_FILE"
+LOG "Running npm install" $?
+
+npm run build &>>"$LOG_FILE"
+LOG "Running npm build" $?
+
+# Copy built files to nginx
+cp -r dist/* /usr/share/nginx/html/ &>>"$LOG_FILE"
+LOG "Copying build to /usr/share/nginx/html" $?
+
+echo -e "${G}Frontend deployment complete.${N}" | tee -a "$LOG_FILE"
+```
+- create frontend.pkr.hcl
+```hcl
+packer {
+  required_plugins {
+    amazon = {
+      source  = "github.com/hashicorp/amazon"
+      version = "~> 1"
+    }
+  }
+}
+
+source "amazon-ebs" "amz3_gp3" {
+  ami_name      = "sivaf-{{timestamp}}"
+  instance_type = "t3.micro"
+  region        = "us-east-1"
+  
+  source_ami_filter {
+    filters = {
+      name                = "al2023-ami-2023*"
+      architecture        = "x86_64"
+      root-device-type    = "ebs"
+    }
+    most_recent = true
+    owners      = ["amazon"]
+  }
+  
+  ssh_username  = "ec2-user"
+  # Adding tags to the AMI
+  tags = {
+    Name        = "sivaf-packer-image"
+    Environment = "Development"
+    Owner       = "Konka"
+    CreatedBy   = "Packer"
+    Monitor     = "true"
+  }
+}
+
+build {
+  name    = "sivaf"
+  sources = ["source.amazon-ebs.amz3_gp3"]
+
+  provisioner "file" {
+    source      = "frontend.sh"
+    destination = "/tmp/frontend.sh"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "chmod +x /tmp/frontend.sh",
+      "sudo /tmp/frontend.sh"
+    ]
+  }
+}
+```
+- create AMI
+```bash
+cd frontend
+packer init .
+packer fmt .
+packer validate .
+packer build .
+```
+11. Create S3 bucket and place nginx.conf in it
+```nginx
+events {}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log /var/log/nginx/access.log main;
+    error_log /var/log/nginx/error.log warn;
+
+    server {
+        listen 80 default_server;
+        server_name _;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        gzip on;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+        # Serve frontend
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        # Proxy API requests to backend
+        location /api/ {
+            proxy_pass http://backend.konkas.tech;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}
+```
+12. Create IAM role with below policy
 ```json
 {
   "Version": "2012-10-17",
@@ -269,22 +468,23 @@ systemctl start backend
   ]
 }
 ```
-
-10. Create Luanch template with frontend-ami choose key and in assign instance profile above create role and enter user data
+- create iam role
+13. Create Luanch template with frontend-ami choose key and in assign instance profile above create role and enter user data
 ```bash
 #!/bin/bash
-aws s3 cp s3://vm-s3-nginx-conf/nginx.conf /etc/nginx/nginx.conf
+aws s3 cp s3://test-siva-nginx-conf/nginx.conf /etc/nginx/nginx.conf
 systemctl restart nginx
 ```
+14. create ASG TG and ALB record for ALB DNS
 
-11. Check the entries in redis
+15. Check the entries in redis
 
 ```markdown    
 redis6-cli -h test-redis.konkas.tech -p 6379 --tls --insecure GET "all_entries" | jq .
 ```
-12. create certificate frontend-vm.konkas.tech same as upload to Route53
+16. create certificate frontend-vm.konkas.tech same as create records to Route53
 
-13. create cloud front 
+17. create cloud front 
 ```markdown
 create distribution --> choose origin frontend-vm.konkas.tech --> Alternative Name frontend-vm.konkas.tech --> certificate choose frontend-vm.konkas.tech
 ```
@@ -298,3 +498,118 @@ Our developers make sure api response should be 15 ms latency application archit
 
 # Phase-2[Monitoring Integration]
 ---
+1. Launch EC2 instance 15GB amazon linux and t3a.small
+2. Download the extract and mv package as prometheus
+- https://prometheus.io/download/
+```bash
+wget  wget https://github.com/prometheus/prometheus/releases/download/v2.53.4/prometheus-2.53.4.linux-amd64.tar.gz
+tar -xvzf prometheus-2.53.4.linux-amd64.tar.gz
+mv prometheus-2.53.4.linux-amd64 prometheus
+```
+2. Create Service file
+
+```bash   
+mkdir -p /home/ec2-user/prometheus/data --> storage for prometheus
+```
+```bash
+sudo nano /etc/systemd/system/prometheus.service
+```
+
+```bash
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=ec2-user
+ExecStart=/home/ec2-user/prometheus/prometheus \
+--config.file=/home/ec2-user/prometheus/prometheus.yml \
+--storage.tsdb.path=/home/ec2-user/prometheus/data \
+--web.console.templates=/home/ec2-user/prometheus/consoles \
+--web.console.libraries=/home/ec2-user/prometheus/console_libraries
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+```bash
+sudo systemctl daemon-reexec[refreshes prometheus service]
+sudo systemctl daemon-reload
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+sudo systemctl status prometheus
+journalctl -u prometheus -xe
+```
+
+- 9090  = prometheus
+- 9100  = Node exporter
+
+# Node Exporter Downloads
+```bash
+wget https://github.com/prometheus/node_exporter/releases/download/v1.9.1/node_exporter-1.9.1.linux-amd64.tar.gz
+tar -xvzf node_exporter-1.9.1.linux-amd64.tar.gz
+mv node_exporter-1.9.1.linux-amd64 node_exporter
+```
+```bash
+sudo nano /etc/systemd/system/node_exporter.service
+```
+
+```bash
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+User=ec2-user
+ExecStart=/home/ec2-user/node_exporter/node_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+```
+```bash
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable node_exporter
+sudo systemctl start node_exporter
+sudo systemctl status node_exporter
+```
+
+- curl http://localhost:9100/metrics
+
+
+# Alert Manager
+```bash
+wget https://github.com/prometheus/alertmanager/releases/download/v0.28.1/alertmanager-0.28.1.linux-amd64.tar.gz
+tar -xvzf alertmanager-0.28.1.linux-amd64.tar.gz
+sudo mv alertmanager-0.28.1.linux-amd64 alertmanager
+```
+```bash
+sudo nano /etc/systemd/system/alertmanager.service
+```
+```bash
+[Unit]
+Description=Prometheus Alertmanager
+After=network.target
+
+[Service]
+User=ec2-user
+ExecStart=/home/ec2-user/alertmanager/alertmanager \
+  --config.file=/home/ec2-user/alertmanager/alertmanager.yml \
+  --storage.path=/home/ec2-user/alertmanager/data
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+```bash
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable alertmanager
+sudo systemctl start alertmanager
+sudo systemctl status alertmanager
+```
+
+- curl http://localhost:9093
