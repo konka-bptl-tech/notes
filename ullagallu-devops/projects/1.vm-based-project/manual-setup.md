@@ -108,6 +108,116 @@ LOG "Installing npm dependencies for the backend" $?
 echo "Script execution completed successfully." | tee -a "$LOG_FILE"
 ```
 
+```bash
+# Prometheus
+#!/bin/bash
+
+# Variables
+USERID=$(id -u)
+TIMESTAMP=$(date +%F-%H-%M-%S)
+SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
+LOG_FILE="/tmp/${TIMESTAMP}-${SCRIPT_NAME}.log"
+REPO_URL="https://github.com/sivaramakrishna-konka/3-tier-vm-backend.git"
+APP_DIR="/app"
+NODE_EXPORTER_VERSION="1.9.1"
+NODE_EXPORTER_USER="ec2-user"
+NODE_EXPORTER_DIR="/home/${NODE_EXPORTER_USER}/node_exporter"
+
+# Colors
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"
+
+echo "Script started at: $TIMESTAMP"
+echo "Log file: $LOG_FILE"
+
+# Logging function
+LOG() {
+    local MESSAGE="$1"
+    local STATUS="$2"
+    if [ "$STATUS" -eq 0 ]; then
+        echo -e "$MESSAGE ..... ${G}Success${N}" | tee -a "$LOG_FILE"
+    else
+        echo -e "$MESSAGE ..... ${R}Failed${N}" | tee -a "$LOG_FILE"
+        exit 1
+    fi
+}
+
+# Check if script is run as root
+if [ $USERID -ne 0 ]; then
+    echo -e "${R}Please run this script with sudo privileges${N}" | tee -a "$LOG_FILE"
+    exit 1
+else
+    echo -e "${G}Starting installation process...${N}" | tee -a "$LOG_FILE"
+fi
+
+# Update system and install packages
+dnf update -y &>>"$LOG_FILE"
+LOG "System update" $?
+
+curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - &>>"$LOG_FILE"
+LOG "Adding Node.js 20 repo" $?
+
+dnf install git telnet nodejs amazon-cloudwatch-agent -y &>>"$LOG_FILE"
+LOG "Installing git, telnet, Node.js, CloudWatch Agent" $?
+
+# Add 'expense' user if not present
+if ! id -u expense &>/dev/null; then
+    useradd expense &>>"$LOG_FILE"
+    LOG "Adding user 'expense'" $?
+fi
+
+# Backend app setup
+if [ ! -d "$APP_DIR" ]; then
+    mkdir "$APP_DIR" &>>"$LOG_FILE"
+    LOG "Creating app directory" $?
+
+    git clone "$REPO_URL" "$APP_DIR" &>>"$LOG_FILE"
+    LOG "Cloning backend repo" $?
+else
+    echo "Directory $APP_DIR already exists. Skipping cloning." | tee -a "$LOG_FILE"
+fi
+
+cd "$APP_DIR" && npm install &>>"$LOG_FILE"
+LOG "Installing backend npm dependencies" $?
+
+# Node Exporter Setup
+cd /home/$NODE_EXPORTER_USER || exit 1
+wget https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz &>>"$LOG_FILE"
+LOG "Downloading Node Exporter v${NODE_EXPORTER_VERSION}" $?
+
+tar -xvzf node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz &>>"$LOG_FILE"
+mv node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64 node_exporter &>>"$LOG_FILE"
+rm -f node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz
+LOG "Extracted Node Exporter" $?
+
+# Create systemd service for Node Exporter
+cat <<EOF > /etc/systemd/system/node_exporter.service
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+User=${NODE_EXPORTER_USER}
+ExecStart=${NODE_EXPORTER_DIR}/node_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+EOF
+
+LOG "Node Exporter systemd service file created" $?
+
+# Reload and start Node Exporter service
+systemctl daemon-reexec &>>"$LOG_FILE"
+systemctl daemon-reload &>>"$LOG_FILE"
+systemctl enable node_exporter &>>"$LOG_FILE"
+systemctl start node_exporter &>>"$LOG_FILE"
+LOG "Node Exporter service started" $?
+
+echo -e "${G}Script execution completed successfully.${N}" | tee -a "$LOG_FILE"
+```
 
 - create backend.pkr.hcl in backend folder
 ```hcl
@@ -546,6 +656,7 @@ journalctl -u prometheus -xe
 
 - 9090  = prometheus
 - 9100  = Node exporter
+- promtool check config prometheus.yml
 
 # Node Exporter Downloads
 ```bash
@@ -581,7 +692,8 @@ sudo systemctl status node_exporter
 
 - curl http://localhost:9100/metrics
 
-
+# Graafana
+- https://grafana.com/docs/grafana/latest/setup-grafana/installation/redhat-rhel-fedora/
 # Alert Manager
 ```bash
 wget https://github.com/prometheus/alertmanager/releases/download/v0.28.1/alertmanager-0.28.1.linux-amd64.tar.gz

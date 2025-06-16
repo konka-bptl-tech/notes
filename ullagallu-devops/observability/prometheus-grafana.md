@@ -44,6 +44,7 @@ WantedBy=multi-user.target
 wget https://github.com/prometheus/node_exporter/releases/download/v1.9.1/node_exporter-1.9.1.linux-amd64.tar.gz
 tar -xvzf node_exporter-1.9.1.linux-amd64.tar.gz
 mv node_exporter-1.9.1.linux-amd64 node_exporter
+rm -rf node_exporter-1.9.1.linux-amd64.tar.gz
 sudo nano /etc/systemd/system/node_exporter.service
 ```bash
 [Unit]
