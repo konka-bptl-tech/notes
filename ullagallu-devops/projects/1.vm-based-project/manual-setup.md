@@ -1,3 +1,5 @@
+# Phase-1
+---
 1. Create RDS instance
    - Create Route53 Record
    - Connect and Load Schema
@@ -291,3 +293,7 @@ create distribution --> choose origin frontend-vm.konkas.tech --> Alternative Na
 Our developers make sure api response should be 15 ms latency application architectural response we enable elastic cache it ensure less latency some times it returns cache connnect we enable cloud front for edge locations
 - most of the errors are coming by misconfiguration
 ```
+---
+
+# Phase-2[Monitoring Integration]
+---
