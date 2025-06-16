@@ -552,6 +552,7 @@ journalctl -u prometheus -xe
 wget https://github.com/prometheus/node_exporter/releases/download/v1.9.1/node_exporter-1.9.1.linux-amd64.tar.gz
 tar -xvzf node_exporter-1.9.1.linux-amd64.tar.gz
 mv node_exporter-1.9.1.linux-amd64 node_exporter
+rm -rf node_exporter-1.9.1.linux-amd64.tar.gz
 ```
 ```bash
 sudo nano /etc/systemd/system/node_exporter.service
@@ -586,6 +587,7 @@ sudo systemctl status node_exporter
 wget https://github.com/prometheus/alertmanager/releases/download/v0.28.1/alertmanager-0.28.1.linux-amd64.tar.gz
 tar -xvzf alertmanager-0.28.1.linux-amd64.tar.gz
 sudo mv alertmanager-0.28.1.linux-amd64 alertmanager
+rm -rf alertmanager-0.28.1.linux-amd64.tar.gz
 ```
 ```bash
 sudo nano /etc/systemd/system/alertmanager.service
@@ -612,5 +614,4 @@ sudo systemctl enable alertmanager
 sudo systemctl start alertmanager
 sudo systemctl status alertmanager
 ```
-
 - curl http://localhost:9093
