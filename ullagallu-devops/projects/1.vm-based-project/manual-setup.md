@@ -17,7 +17,7 @@ GRANT ALL ON crud_app.* TO 'crud'@'%';
 FLUSH PRIVILEGES;
 ```
 
-2. Luanch Elastic Cache Redis OSS
+2. Luanch Elastic Cache valkey
    - Create Route53 Record
    
 3. Just Launch Ec2 instance install sudo dnf install redis6
