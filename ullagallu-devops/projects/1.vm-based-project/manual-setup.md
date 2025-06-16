@@ -109,7 +109,7 @@ echo "Script execution completed successfully." | tee -a "$LOG_FILE"
 ```
 
 
-- create backend.pkr.hcl
+- create backend.pkr.hcl in backend folder
 ```hcl
   packer {
   required_plugins {
@@ -167,6 +167,7 @@ build {
 
 5. Create secrets in secrets manager and non sensitive data in parameter store
    - aws secrets manager --> store a new secret --> other type of secret[enter key value pairs] --> secretname --> review and enter
+   
    - go to parameter store enter all non-sensitive data in secure string type
 6. Create IAM policy to get secrets and paramter strore
 
