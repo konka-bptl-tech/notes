@@ -347,7 +347,7 @@ echo "Installing awscli and jq"
 dnf install -y awscli jq
 
 # Fetch Secrets from Secrets Manager
-echo ""Fectching Secrets from SecretsManager"
+echo "Fectching Secrets from SecretsManager"
 SECRETS=$(aws secretsmanager get-secret-value --secret-id $SECRET_NAME --query SecretString --output text)
 DB_USER=$(echo "$SECRETS" | jq -r .DB_USER)
 DB_PASSWORD=$(echo "$SECRETS" | jq -r .DB_PASSWORD)

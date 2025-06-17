@@ -18,13 +18,36 @@ white box monitoring = cpu,ram,memory, no of requests, latency=time to respond t
 
 up
 node_memory_MemAvailable_bytes / 1024
- - job_name: 'ec2-instances'
+ 
+```yml
+scrape_configs:
+  - job_name: 'ec2-instances'
     ec2_sd_configs:
       - region: us-east-1
         filters:
-          - name: "tag:Monitoring"
-            values: ["true"]
+          - name: "tag:Name"
+            values: ["backend"]
+    relabel_configs:
+      - source_labels: [__meta_ec2_private_ip]
+        target_label: __address__
+        replacement: $1:9100
 
+      - source_labels: [__meta_ec2_instance_id]
+        target_label: instance_id
+
+      - source_labels: [__meta_ec2_tag_Name]
+        target_label: instance_name
+```
+```yaml
+- alert: NodeDown
+  expr: up == 0
+  for: 5m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Node is down"
+    description: "Instance {{ $labels.instance_id }} ({{ $labels.instance_name }}) is not reachable"
+```
 
 1860
 
