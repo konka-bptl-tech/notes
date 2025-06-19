@@ -398,6 +398,9 @@ systemctl start backend
 USERID=$(id -u)
 TIMESTAMP=$(date +%F-%H-%M-%S)
 SCRIPT_NAME=$(basename "$0" | cut -d "." -f1)
+NODE_EXPORTER_VERSION="1.9.1"
+NODE_EXPORTER_USER="ec2-user"
+NODE_EXPORTER_DIR="/home/${NODE_EXPORTER_USER}/node_exporter"
 LOG_FILE="/tmp/${TIMESTAMP}-${SCRIPT_NAME}.log"
 
 # Colors
@@ -461,6 +464,41 @@ LOG "Running npm build" $?
 # Copy built files to nginx
 cp -r dist/* /usr/share/nginx/html/ &>>"$LOG_FILE"
 LOG "Copying build to /usr/share/nginx/html" $?
+
+# Node Exporter Setup
+cd /home/$NODE_EXPORTER_USER || exit 1
+wget https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz &>>"$LOG_FILE"
+LOG "Downloading Node Exporter v${NODE_EXPORTER_VERSION}" $?
+
+tar -xvzf node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz &>>"$LOG_FILE"
+mv node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64 node_exporter &>>"$LOG_FILE"
+rm -f node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz
+LOG "Extracted Node Exporter" $?
+
+# Create systemd service for Node Exporter
+cat <<EOF > /etc/systemd/system/node_exporter.service
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+User=${NODE_EXPORTER_USER}
+ExecStart=${NODE_EXPORTER_DIR}/node_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+EOF
+
+LOG "Node Exporter systemd service file created" $?
+
+# Reload and start Node Exporter service
+systemctl daemon-reexec &>>"$LOG_FILE"
+systemctl daemon-reload &>>"$LOG_FILE"
+systemctl enable node_exporter &>>"$LOG_FILE"
+systemctl start node_exporter &>>"$LOG_FILE"
+LOG "Node Exporter service started" $?
+
 
 echo -e "${G}Frontend deployment complete.${N}" | tee -a "$LOG_FILE"
 ```
