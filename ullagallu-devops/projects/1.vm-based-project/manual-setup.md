@@ -641,6 +641,8 @@ redis6-cli -h test-redis.konkas.tech -p 6379 --tls --insecure GET "all_entries" 
 17. create cloud front 
 ```markdown
 create distribution --> choose origin frontend-vm.konkas.tech --> Alternative Name frontend-vm.konkas.tech --> certificate choose frontend-vm.konkas.tech
+
+Behaviours --> edit --> Allowed HTTP methods[ALLHTTPMethodsChoose][RedirectHTTPTOHTTPS]
 ```
 
 
@@ -771,3 +773,16 @@ sudo systemctl start alertmanager
 sudo systemctl status alertmanager
 ```
 - curl http://localhost:9093
+
+
+# reasons for backend not running
+- I face server errors[5xx] because valkey key is not running if you curl http://test-backend.konkas.tech
+  you will get above errors
+- For that check backend logs by using 
+  - journalctl -u backend
+  - telnet -h -p
+  - ss -tunlp
+- If you face client errors[4xx] because nginx proxy pass unable to reach backend because backend url is wrong or trailing slashes mis configured nginx proxy pass
+- tail -f /var/log/nginx/access.log
+- tail -f /var/log/nginx/error.log
+- journalctl -u nginx
