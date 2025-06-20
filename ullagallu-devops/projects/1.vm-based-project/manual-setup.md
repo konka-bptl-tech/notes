@@ -21,8 +21,8 @@ FLUSH PRIVILEGES;
    - Create Route53 Record
    
 3. Just Launch Ec2 instance install sudo dnf install redis6
-   - Checking connection telnet <dns-name> <port> to comeout from telnet  press ctrl + ] then enter quit
    - Checking the connection redis6-cli -h <dns-name> -p <port> --tls --insecure
+   - Checking connection telnet <dns-name> <port> to comeout from telnet  press ctrl + ] then enter quit
 
 4. Prepare AMI wihtout service file
 - Go to aws shell install packer using below commands

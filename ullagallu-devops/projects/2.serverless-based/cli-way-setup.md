@@ -4,53 +4,65 @@
 1. Create RDS instance
    - Create Route53 Record
    - Connect and Load Schema
-     CREATE DATABASE IF NOT EXISTS crud_app;
-      USE crud_app;
+```bash
+CREATE DATABASE IF NOT EXISTS crud_app;
+USE crud_app;
 
-      CREATE TABLE entries (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        amount INT NOT NULL,
-        description VARCHAR(255) NOT NULL
-      );
-      CREATE USER IF NOT EXISTS 'crud'@'%' IDENTIFIED BY 'CrudApp@1';
-      GRANT ALL ON crud_app.* TO 'crud'@'%';
-      FLUSH PRIVILEGES;
-2. Luanch Elastic Cache Redis OSS
+CREATE TABLE entries (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  amount INT NOT NULL,
+  description VARCHAR(255) NOT NULL
+);
+CREATE USER IF NOT EXISTS 'crud'@'%' IDENTIFIED BY 'CrudApp@1';
+GRANT ALL ON crud_app.* TO 'crud'@'%';
+FLUSH PRIVILEGES;
+```
+2. Luanch Elastic Cache Valkey
    - Create Route53 Record
-
 3. Test Elastic Cache on aws cli from ec2 instance
-
-4. aws ecs create-cluster --cluster-name example
-5. create loggroup aws logs create-log-group --log-group-name /ecs/nodejs-backend
-6. policy and role 
+4. create log group aws logs create-log-group --log-group-name /aws/my-application/logs
+4. Create secrets in secrets manager and non sensitive data in parameter store
+- aws secrets manager --> store a new secret --> other type of secret[enter key value pairs] --> secretname --> review and enter
+```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "SecretsManagerAccess",
-      "Effect": "Allow",
-      "Action": [
-        "secretsmanager:GetSecretValue"
-      ],
-      "Resource": [
-        "arn:aws:secretsmanager:us-east-1:522814728660:secret:crud/db/credentials-XqiJ6q"
-      ]
-    },
-    {
-      "Sid": "SSMParameterAccess",
-      "Effect": "Allow",
-      "Action": [
-        "ssm:GetParameter",
-        "ssm:GetParameters"
-      ],
-      "Resource": [
-        "arn:aws:ssm:us-east-1:522814728660:parameter/crud/config/DB_HOST",
-        "arn:aws:ssm:us-east-1:522814728660:parameter/crud/config/DB_NAME",
-        "arn:aws:ssm:us-east-1:522814728660:parameter/crud/config/REDIS_HOST",
-        "arn:aws:ssm:us-east-1:522814728660:parameter/crud/config/REDIS_PORT"
-      ]
-    },
-    {
+  "DB_USER": "crud",
+  "DB_PASSWORD": "CrudApp@1"
+}
+```
+- enter the path like <environment>/<project_name>/<credentials_name> test/curd/db_crentials
+
+- go to parameter store enter all non-sensitive data in secure string type
+```bash
+/test/crud/DB_HOST[name]=test-db.konkas.tech[value]
+/test/crud/DB_NAME[name]=crud_app[value]
+/test/crud/REDIS_HOST[name]=test-redis.konkas.tech[value]
+```
+5. Create IAM policy to get secrets and paramter strore
+
+```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ssm:GetParameter",
+          "ssm:GetParameters"
+        ],
+        "Resource": [
+          "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/test/crud/*" # Replace with your actual arn 
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "secretsmanager:GetSecretValue"
+        ],
+        "Resource": [
+          "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:crud/db/credentials-??????" # Replace with actual arn
+        ]
+      },
+      {
       "Sid": "CloudWatchLogsAccess",
       "Effect": "Allow",
       "Action": [
@@ -63,9 +75,15 @@
         "arn:aws:logs:us-east-1:522814728660:log-group:/ecs/nodejs-backend*"
       ]
     }
-  ]
-}
-7. task definition
+    ]
+  }
+```
+- create iam role backend crednetials and ssm parameter and attach above policy
+6. Create ec2 instance install docker and create image of backend and push to docker hub or ecr
+7. aws ecs create-cluster --cluster-name example
+
+. task definition
+```json
 cat > task-def.json <<EOF
 {
   "family": "nodejs-backend-task",
@@ -96,16 +114,6 @@ cat > task-def.json <<EOF
         {
             "name": "ALLOWED_ORIGIN",
             "value": "https://frontend-ecs.konkas.tech"
-        }
-        ],
-      "secrets": [
-        {
-          "name": "DB_USER",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:522814728660:secret:crud/db/credentials-XqiJ6q:DB_USER::"
-        },
-        {
-          "name": "DB_PASSWORD",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:522814728660:secret:crud/db/credentials-XqiJ6q:DB_PASSWORD::"
         },
         {
           "name": "DB_HOST",
@@ -118,16 +126,24 @@ cat > task-def.json <<EOF
         {
           "name": "REDIS_HOST",
           "valueFrom": "arn:aws:ssm:us-east-1:522814728660:parameter/crud/config/REDIS_HOST"
+        }
+        ],
+      "secrets": [
+        {
+          "name": "DB_USER",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:522814728660:secret:crud/db/credentials-XqiJ6q:DB_USER::"
         },
         {
-          "name": "REDIS_PORT",
-          "valueFrom": "arn:aws:ssm:us-east-1:522814728660:parameter/crud/config/REDIS_PORT"
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:522814728660:secret:crud/db/credentials-XqiJ6q:DB_PASSWORD::"
         }
       ]
     }
   ]
 }
 EOF
+```
+
 8. aws ecs register-task-definition --cli-input-json file://task-def.json
 9. aws servicediscovery create-service \
     --name backend \
