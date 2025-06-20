@@ -82,7 +82,7 @@ FLUSH PRIVILEGES;
 6. Create ec2 instance install docker and create image of backend and push to docker hub or ecr
 7. aws ecs create-cluster --cluster-name example
 
-. task definition
+8. task definition
 ```json
 cat > task-def.json <<EOF
 {
@@ -143,7 +143,6 @@ cat > task-def.json <<EOF
 }
 EOF
 ```
-
 8. aws ecs register-task-definition --cli-input-json file://task-def.json
 9. aws servicediscovery create-service \
     --name backend \
