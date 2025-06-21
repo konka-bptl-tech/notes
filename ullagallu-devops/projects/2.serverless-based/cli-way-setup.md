@@ -250,7 +250,16 @@ aws ecs list-task-definitions \
 ```
 
 
+# Client Side Errors
+4XX
 
+# Server Side Errors
+5xx
+
+503 ✅ What "503 Service Temporarily Unavailable" Means
+This is an ALB error, not a container error. It means:
+
+🔴 The Load Balancer is unable to route traffic to a healthy target.
 
 
 
