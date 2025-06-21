@@ -84,7 +84,7 @@ FLUSH PRIVILEGES;
 
 8. task definition
 ```json
-cat > task-def.json <<EOF
+// cat > task-def.json <<EOF
 {
   "family": "nodejs-backend-task",
   "networkMode": "awsvpc",
@@ -141,7 +141,7 @@ cat > task-def.json <<EOF
     }
   ]
 }
-EOF
+//EOF
 ```
 8. aws ecs register-task-definition --cli-input-json file://task-def.json
 9. Create service discovery for backend 
