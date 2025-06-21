@@ -265,19 +265,19 @@ This is an ALB error, not a container error. It means:
 
 
 
+```bash
+curl -H "Origin: https://frontend-ecs.konkas.tech" \
+-v "https://backend-ecs.konkas.tech/api/entries"
+```
 
+```bash
+curl -X OPTIONS \
+-H "Origin: https://frontend-ecs.konkas.tech" \
+-H "Access-Control-Request-Method: GET" \
+-v "https://backend-ecs.konkas.tech/api/entries"
+```
 
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
 
