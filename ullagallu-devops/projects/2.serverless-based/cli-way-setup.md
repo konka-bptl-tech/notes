@@ -144,11 +144,17 @@ cat > task-def.json <<EOF
 EOF
 ```
 8. aws ecs register-task-definition --cli-input-json file://task-def.json
-9. aws servicediscovery create-service \
+9. Create service discovery for backend 
+```bash
+aws servicediscovery create-service \
     --name backend \
     --namespace-id ns-asl6syvjpdvlthvc \
     --dns-config "NamespaceId=ns-asl6syvjpdvlthvc,RoutingPolicy=WEIGHTED,DnsRecords=[{Type=A,TTL=60}]"
-10. aws ecs create-service \
+```
+
+10. 
+```bash
+aws ecs create-service \
     --cluster example \
     --service-name backend \
     --task-definition nodejs-backend-task \
@@ -156,70 +162,84 @@ EOF
     --launch-type FARGATE \
     --network-configuration "awsvpcConfiguration={subnets=[subnet-01899a28d9cd091c2],securityGroups=[sg-0c2026150f42233ac],assignPublicIp=ENABLED}" \
     --service-registries "registryArn=arn:aws:servicediscovery:us-east-1:522814728660:service/srv-nzv5kqsmcxnj6w7q"
+```
 11. Create TG and ALB and create record in route53 backend-ecs.konkas.tech
 
 12. Update ECS Service with Load Balancer details
+```bash
 aws ecs update-service \
     --cluster example \
     --service backend \
     --load-balancers targetGroupArn=arn:aws:elasticloadbalancing:us-east-1:522814728660:targetgroup/ecs-backend/08e6a43ed4cc8e2a,containerName=nodejs-backend,containerPort=8080
+```bash
 
-13. Lunach Ec2 install and install node js 20 
-     sudo dnf update -y
-     sudo dnf install git tmux -y
-     curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
-     sudo dnf install nodejs -y
-     node -v
-     npm -v
-     git clone https://github.com/sivaramakrishna-konka/3-tier-vm-frontend.git
-     npm install
-     VITE_API_URL=https://backend-ecs.konkas.tech/api/ npm run build
-     cd dist
-     grep -r "https://backend.ecs.konkas.tech" .
-14. Create s3 bucket
-    aws s3 sync dist/ s3://konkas-s3-frontend-application --delete
-15. create cloud front distribution > 
-    Single website or app > 
-    Origin domain[s3bucket] > 
-    Origin access[Origin access control settings (recommended)] > 
-    Origin access control[create new] >
-    Viewer protocol policy[Redirect HTTP to HTTPS] >
-    Allowed HTTP methods[GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE] >
-    Alternate domain name (CNAME) - optional[frontend-ecs.konkas.tech] >
-    Custom SSL certificate - optional[frontend-ecs.konkas.tech from acm] >
-    Default root object - optional[index.html] >
-    WAF[Do not enable security protections] >
-    Create distribution
-    It populates bucket policy copy it
-    {
-        "Version": "2008-10-17",
-        "Id": "PolicyForCloudFrontPrivateContent",
-        "Statement": [
-            {
-                "Sid": "AllowCloudFrontServicePrincipal",
-                "Effect": "Allow",
-                "Principal": {
-                    "Service": "cloudfront.amazonaws.com"
-                },
-                "Action": "s3:GetObject",
-                "Resource": "arn:aws:s3:::konkas-s3-frontend-application/*",
-                "Condition": {
-                    "StringEquals": {
-                      "AWS:SourceArn": "arn:aws:cloudfront::522814728660:distribution/E2BR1Q9PGK3VM8"
-                    }
-                }
-            }
-        ]
+13. Build and minimize react js
+- Lunach Ec2 install and install node js 20 
+```bash     
+sudo dnf update -y
+sudo dnf install git tmux -y
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+sudo dnf install nodejs -y
+node -v
+npm -v
+git clone https://github.com/sivaramakrishna-konka/3-tier-vm-frontend.git
+npm install
+VITE_API_URL=https://backend-ecs.konkas.tech/api/ npm run build
+cd dist
+grep -r "https://backend.ecs.konkas.tech" .
+```
+14. Create s3 bucket and upload to minimized reactjs into s3
+```bash
+aws s3 sync dist/ s3://konkas-s3-frontend-application --delete
+```
+15. Create CF
+```markdown
+create cloud front distribution > 
+Single website or app > 
+Origin domain[s3bucket] > 
+Origin access[Origin access control settings (recommended)] > 
+Origin access control[create new] >
+Viewer protocol policy[Redirect HTTP to HTTPS] >
+Allowed HTTP methods[GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE] >
+Alternate domain name (CNAME) - optional[frontend-ecs.konkas.tech] >
+Custom SSL certificate - optional[frontend-ecs.konkas.tech from acm] >
+Default root object - optional[index.html] >
+WAF[Do not enable security protections] >
+Create distribution
+```
+- update bucket policy
+```json
+{
+  "Version": "2008-10-17",
+  "Id": "PolicyForCloudFrontPrivateContent",
+  "Statement": [
+      {
+          "Sid": "AllowCloudFrontServicePrincipal",
+          "Effect": "Allow",
+          "Principal": {
+              "Service": "cloudfront.amazonaws.com"
+          },
+          "Action": "s3:GetObject",
+          "Resource": "arn:aws:s3:::konkas-s3-frontend-application/*",
+          "Condition": {
+              "StringEquals": {
+                "AWS:SourceArn": "arn:aws:cloudfront::522814728660:distribution/E2BR1Q9PGK3VM8"
+              }
+          }
       }
+  ]
+}
+```
 16. Goto s3 bucket apply s3 bucket on it
-
 # Delete Service
+```bash
 aws ecs delete-service \
   --cluster example \
   --service backend \
   --force
-
+```
 # Deregister TD
+```bash
 aws ecs list-task-definitions \
     --status ACTIVE \
     --query 'taskDefinitionArns' \
@@ -227,10 +247,7 @@ aws ecs list-task-definitions \
   | tr '\t' '\n' \
   | grep -v '^$' \
   | xargs -n1 aws ecs deregister-task-definition --task-definition
-
-
-
--  
+```
 
 
 
