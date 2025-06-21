@@ -186,7 +186,7 @@ git clone https://github.com/sivaramakrishna-konka/3-tier-vm-frontend.git
 npm install
 VITE_API_URL=https://backend-ecs.konkas.tech/api/ npm run build
 cd dist
-grep -r "https://backend.ecs.konkas.tech" .
+grep -r "https://backend-ecs.konkas.tech/api/entries" .
 ```
 14. Create s3 bucket and upload to minimized reactjs into s3
 ```bash
