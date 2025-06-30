@@ -40,43 +40,43 @@ FLUSH PRIVILEGES;
 5. Create IAM policy to get secrets and paramter strore
 
 ```json
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "ssm:GetParameter",
-          "ssm:GetParameters"
-        ],
-        "Resource": [
-          "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/test/crud/*" # Replace with your actual arn 
-        ]
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-          "secretsmanager:GetSecretValue"
-        ],
-        "Resource": [
-          "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:crud/db/credentials-??????" # Replace with actual arn
-        ]
-      },
-      {
-      "Sid": "CloudWatchLogsAccess",
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
       "Effect": "Allow",
       "Action": [
-        "logs:CreateLogStream",
-        "logs:PutLogEvents",
-        "logs:DescribeLogStreams",
-        "logs:CreateLogGroup"
+        "ssm:GetParameter",
+        "ssm:GetParameters"
       ],
       "Resource": [
-        "arn:aws:logs:us-east-1:522814728660:log-group:/ecs/nodejs-backend*"
+        "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/test/crud/*" # Replace with your actual arn 
       ]
-    }
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:crud/db/credentials-??????" # Replace with actual arn
+      ]
+    },
+    {
+    "Sid": "CloudWatchLogsAccess",
+    "Effect": "Allow",
+    "Action": [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
+      "logs:CreateLogGroup"
+    ],
+    "Resource": [
+      "arn:aws:logs:us-east-1:522814728660:log-group:/ecs/nodejs-backend*"
     ]
   }
+  ]
+}
 ```
 - create iam role backend crednetials and ssm parameter and attach above policy
 6. Create ec2 instance install docker and create image of backend and push to docker hub or ecr
@@ -140,8 +140,7 @@ FLUSH PRIVILEGES;
       ]
     }
   ]
-}
-//EOF
+}}
 ```
 8. aws ecs register-task-definition --cli-input-json file://task-def.json
 9. Create service discovery for backend 
@@ -173,6 +172,54 @@ aws ecs update-service \
     --load-balancers targetGroupArn=arn:aws:elasticloadbalancing:us-east-1:522814728660:targetgroup/ecs-backend/08e6a43ed4cc8e2a,containerName=nodejs-backend,containerPort=8080
 ```bash
 
+<<<<<<< HEAD
+13. Lunach Ec2 install and install node js 20 
+     sudo dnf update -y
+     sudo dnf install git tmux -y
+     curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+     sudo dnf install nodejs -y
+     node -v
+     npm -v
+     git clone https://github.com/sivaramakrishna-konka/3-tier-vm-frontend.git
+     npm install
+     VITE_API_URL=https://backend-ecs.konkas.tech npm run build
+     cd dist
+     grep -r "https://backend.ecs.konkas.tech" .
+14. Create s3 bucket
+    aws s3 sync dist/ s3://konkas-s3-frontend-application --delete
+15. create cloud front distribution > 
+    Single website or app > 
+    Origin domain[s3bucket] > 
+    Origin access[Origin access control settings (recommended)] > 
+    Origin access control[create new] >
+    Viewer protocol policy[Redirect HTTP to HTTPS] >
+    Allowed HTTP methods[GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE] >
+    Alternate domain name (CNAME) - optional[frontend-ecs.konkas.tech] >
+    Custom SSL certificate - optional[frontend-ecs.konkas.tech from acm] >
+    Default root object - optional[index.html] >
+    WAF[Do not enable security protections] >
+    Create distribution
+    It populates bucket policy copy it
+    {
+        "Version": "2008-10-17",
+        "Id": "PolicyForCloudFrontPrivateContent",
+        "Statement": [
+            {
+                "Sid": "AllowCloudFrontServicePrincipal",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "cloudfront.amazonaws.com"
+                },
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::konkas-s3-frontend-application/*",
+                "Condition": {
+                    "StringEquals": {
+                      "AWS:SourceArn": "arn:aws:cloudfront::522814728660:distribution/E2BR1Q9PGK3VM8"
+                    }
+                }
+            }
+        ]
+=======
 13. Build and minimize react js
 - Lunach Ec2 install and install node js 20 
 ```bash     
@@ -226,6 +273,7 @@ Create distribution
                 "AWS:SourceArn": "arn:aws:cloudfront::522814728660:distribution/E2BR1Q9PGK3VM8"
               }
           }
+>>>>>>> cc8c74dcb238f59738df0741b3b4259dc2198c7d
       }
   ]
 }
