@@ -793,3 +793,17 @@ sudo systemctl status alertmanager
 - tail -f /var/log/nginx/access.log
 - tail -f /var/log/nginx/error.log
 - journalctl -u nginx
+
+
+
+
+
+
+
+
+# prometheus-grafana setup
+1. Install prometheus
+    - prometheus dashboard
+2. Launch another instance install NodeExporter test it
+3. Install Grafana in Prometheus instance
+4. Add the tags to get dynamic instances
